@@ -11,9 +11,9 @@ import Font from './components/font'
 import AsyncComponent from './components/async-component'
 
 const landingPage = () => import(/* webpackChunkName:'landing' */ './components/landing-page')
-const materializeClockpickerPage = () => import(/* webpackChunkName:'landing' */ './components/materialize-clockpicker-page')
-const materialUIDatepickerPage = () => import(/* webpackChunkName:'landing' */ './components/material-ui-datepicker-page')
-const notFoundPage = () => import(/* webpackChunkName:'404' */ './components/404-page')
+const materializeClockpickerPage = () => import(/* webpackChunkName:'materialize-clockpicker' */ './components/materialize-clockpicker-page')
+const materialUIDatepickerPage = () => import(/* webpackChunkName:'material-ui-datepicker' */ './components/material-ui-datepicker-page')
+const notFoundPage = () => import(/* webpackChunkName:'404-page' */ './components/404-page')
 
 const theme = createMuiTheme({
   palette: {
