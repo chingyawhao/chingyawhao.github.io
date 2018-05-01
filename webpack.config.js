@@ -11,7 +11,7 @@ module.exports = {
       'webpack-dev-server/client?',
       './src/client'
     ]:['./src/client'],
-    '404': ['ghspa']
+    '404': ['./src/client/404']
   },
   output: {
     path: path.join(__dirname),
