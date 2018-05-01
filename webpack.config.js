@@ -6,10 +6,13 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 module.exports = {
   mode: process.env.NODE_ENV,
   devtool: 'eval',
-  entry: process.env.NODE_ENV === 'development'? [
-    'webpack-dev-server/client?',
-    './src/client'
-  ]:['./src/client'],
+  entry: {
+    index: process.env.NODE_ENV === 'development'? [
+      'webpack-dev-server/client?',
+      './src/client'
+    ]:['./src/client'],
+    '404': ['ghspa']
+  },
   output: {
     path: path.join(__dirname),
     filename: '[name].bundle.js',
@@ -47,7 +50,13 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/client/index.html'
+      template: 'src/client/index.html',
+      chunks: ['index']
+    }),
+    new HtmlWebpackPlugin({
+      filename: '404.html',
+      template: 'src/client/404.html',
+      chunks: ['404']
     }),
     new CopyWebpackPlugin([{
       from: 'src/asset/static/**/*',
