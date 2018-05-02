@@ -69,7 +69,7 @@ class MaterialUIDatepickerPage extends ReSub.ComponentBase<MaterialUIDatepickerP
           </Typography>
           <div className={classes.divider}/>
           <form className={classes.form}>
-            <DateFormatInput name='date-input' value={date} onChange={this.onChange} placement='top-start'/>
+            <DateFormatInput name='date-input' value={date} onChange={this.onChange} dialog={screenType === 'xs-phone'}/>
           </form>
           <Button href='https://github.com/chingyawhao/material-ui-next-datepicker'>VISIT MY PROJECT</Button>
         </div>
