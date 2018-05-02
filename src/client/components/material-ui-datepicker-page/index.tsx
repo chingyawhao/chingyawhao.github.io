@@ -26,6 +26,10 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
     left: '32px',
     top: '28px',
   },
+  title: {
+    textAlign: 'center',
+    padding: '0 48px'
+  },
   divider: {
     height: '3px',
     width: '120px',
@@ -60,7 +64,7 @@ class MaterialUIDatepickerPage extends ReSub.ComponentBase<MaterialUIDatepickerP
       <CommonPage>
         <div className={classes.row}>
           <IconButton onClick={this.goBack} className={classes.backButton}><ArrowBackIcon/></IconButton>
-          <Typography variant='display1' color='inherit' component='h2'>
+          <Typography className={classes.title} variant='display1' color='inherit' component='h2'>
             Material UI Next Datepicker
           </Typography>
           <div className={classes.divider}/>
