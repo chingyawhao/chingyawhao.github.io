@@ -16,7 +16,7 @@ import Materialize from './materialize'
 const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
   row: {
     position: 'relative',
-    width: '100%',
+    width: 'calc(100% + 64px)',
     display: 'flex',
     flexDirection: 'column',
     padding: '32px',
@@ -26,6 +26,10 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
     position: 'absolute',
     left: '32px',
     top: '28px',
+  },
+  title: {
+    textAlign: 'center',
+    padding: '0 48px'
   },
   divider: {
     height: '3px',
@@ -37,6 +41,9 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
   },
   form: {
     width: '230px'
+  },
+  button: {
+    fontWeight: 400
   }
 })
 @(withStyles as any)(styles)
@@ -69,7 +76,7 @@ class MaterializeClockpickerPage extends ReSub.ComponentBase<MaterializeClockpic
         <Materialize onLoad={this.pickATime}/>
         <div className={classes.row}>
           <IconButton onClick={this.goBack} className={classes.backButton}><ArrowBackIcon/></IconButton>
-          <Typography variant='display1' color='inherit' component='h2'>
+          <Typography className={classes.title} variant='display1' color='inherit' component='h2'>
             Materialize Clockpicker
           </Typography>
           <div className={classes.divider}/>
@@ -79,7 +86,7 @@ class MaterializeClockpickerPage extends ReSub.ComponentBase<MaterializeClockpic
               <input id='timepicker' className='timepicker' type='time'/>
             </div>
           </form>
-          <Button href='https://github.com/chingyawhao/materialize-clockpicker'>VISIT MY PROJECT</Button>
+          <Button classes={{label:classes.button}} href='https://github.com/chingyawhao/materialize-clockpicker'>VISIT MY PROJECT</Button>
         </div>
       </CommonPage>
     )
