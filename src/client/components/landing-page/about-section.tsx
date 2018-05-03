@@ -30,7 +30,9 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
   },
   buttonBase: {
     width: '100%',
+    maxWidth: '246px',
     height: '100%',
+    margin: 'auto',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -148,7 +150,7 @@ class AboutSection extends ReSub.ComponentBase<AboutSectionProps, AboutSectionSt
               activeColor: classes.aiChanActive,
               name: 'Ai Chan Chatbot'
             }].map(tile =>
-              <GridListTile key={tile.id}>
+              <GridListTile classes={{root:classes.gridListTile}} key={tile.id}>
                 <ButtonBase classes={{root:[classes.buttonBase, tile.base].join(' ')}} focusRipple
                   onClick={tile.link? () => goToPage(tile.link):undefined}
                   href={tile.href? tile.href:undefined}
