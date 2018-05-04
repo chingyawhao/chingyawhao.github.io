@@ -32,7 +32,6 @@ const theme = createMuiTheme({
   }
 })
 
-document.querySelector('body').style.background = grey[800]
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <Favicon/>

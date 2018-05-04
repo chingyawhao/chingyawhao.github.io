@@ -7,7 +7,7 @@ const styles = (theme:Theme):Record<string, React.CSSProperties> => ({
   loading: {
     minHeight: '100vh',
     minWidth: '100vw',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: grey[800],
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
