@@ -4,7 +4,7 @@ import {Router, RouteComponentProps} from 'react-router'
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom'
 import * as classnames from 'classnames'
 import {MuiThemeProvider, createMuiTheme} from 'material-ui/styles'
-import {pink, purple} from 'material-ui/colors'
+import {pink, purple, grey} from 'material-ui/colors'
 
 import Favicon from './components/favicon'
 import Font from './components/font'
@@ -32,6 +32,7 @@ const theme = createMuiTheme({
   }
 })
 
+document.querySelector('body').style.background = grey[800]
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <Favicon/>

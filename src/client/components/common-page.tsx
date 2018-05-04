@@ -96,9 +96,6 @@ class LandingPage extends ReSub.ComponentBase<LandingPageProps, LandingPageState
       screenType: screenStore.type()
     }
   }
-  componentDidMount() {
-    document.querySelector('body').style.background = grey[800]
-  }
   render() {
     const {children, classes} = this.props
     const {screenType} = this.state
