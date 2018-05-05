@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import * as ReSub from 'resub'
 import {withStyles, Theme, StyleRules, StyleRulesCallback, StyledComponentProps} from 'material-ui/styles'
 import {blue, lightGreen, grey} from 'material-ui/colors'
 import Grid from 'material-ui/Grid'
@@ -12,7 +11,6 @@ import Button from 'material-ui/Button'
 import {GithubCircle as GithubIcon, Linkedin as LinkedinIcon, Deviantart as DeviantartIcon} from 'mdi-material-ui'
 
 import * as Hao from '../../asset/img/hao.svg'
-import screenStore from '../store/screen'
 
 const blinkerID = Math.ceil(Math.random() * 10000)
 const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
@@ -90,18 +88,12 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
   }
 })
 @(withStyles as any)(styles)
-class LandingPage extends ReSub.ComponentBase<LandingPageProps, LandingPageState> {
-  protected _buildState(props:{}, initial:boolean):LandingPageState {
-    return {
-      screenType: screenStore.type()
-    }
-  }
+class LandingPage extends React.Component<LandingPageProps, LandingPageState> {
   componentWillMount() {
     document.querySelector('body').style.background = grey[800]
   }
   render() {
     const {children, classes} = this.props
-    const {screenType} = this.state
     return (
       <div className={classes.container}>
         <div className={classes.headerContainer}>
@@ -144,8 +136,6 @@ class LandingPage extends ReSub.ComponentBase<LandingPageProps, LandingPageState
 }
 interface LandingPageProps extends React.Props<{}>, StyledComponentProps {
 }
-interface LandingPageState {
-  screenType: 'xl-desktop' | 'lg-desktop' | 'md-desktop' | 'sm-tablet' | 'xs-phone'
-}
+interface LandingPageState {}
 
 export default LandingPage
