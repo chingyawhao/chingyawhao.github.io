@@ -12,7 +12,7 @@ import AsyncComponent from './components/async-component'
 
 const landingPage = () => import(/* webpackChunkName:'landing' */ './components/landing-page')
 const materializeClockpickerPage = () => import(/* webpackChunkName:'materialize-clockpicker' */ './components/materialize-clockpicker-page')
-const materialUIDatepickerPage = () => import(/* webpackChunkName:'material-ui-datepicker' */ './components/material-ui-datepicker-page')
+const materialUIPickersPage = () => import(/* webpackChunkName:'material-ui-pickers' */ './components/material-ui-pickers-page')
 const notFoundPage = () => import(/* webpackChunkName:'404-page' */ './components/404-page')
 
 const theme = createMuiTheme({
@@ -44,8 +44,8 @@ ReactDOM.render(
         <Route exact path={`/materialize-clockpicker`} component={(routeComponentProps:RouteComponentProps<any>) =>
           <AsyncComponent module={materializeClockpickerPage} props={routeComponentProps}/>
         }/>
-        <Route exact path={`/material-ui-datepicker`} component={(routeComponentProps:RouteComponentProps<any>) =>
-          <AsyncComponent module={materialUIDatepickerPage} props={routeComponentProps}/>
+        <Route exact path={`/material-ui-pickers`} component={(routeComponentProps:RouteComponentProps<any>) =>
+          <AsyncComponent module={materialUIPickersPage} props={routeComponentProps}/>
         }/>
         <Route path='*' component={(routeComponentProps:RouteComponentProps<any>) =>
           <AsyncComponent module={notFoundPage} props={routeComponentProps}/>
