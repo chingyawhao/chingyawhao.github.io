@@ -137,7 +137,7 @@ class AboutSection extends ReSub.ComponentBase<AboutSectionProps, AboutSectionSt
             }, {
               id: 'material-ui',
               base: classes.materialUIBase,
-              link: '/material-ui-datepicker',
+              link: '/material-ui-pickers',
               avatar: 'https://material-ui-next.com/static/images/material-ui-logo.svg',
               avatarZoom: classes.materialUIZoom,
               activeColor: classes.materialUIActive,

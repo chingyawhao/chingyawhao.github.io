@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
 import IconButton from 'material-ui/IconButton'
 import {ArrowBack as ArrowBackIcon} from '@material-ui/icons'
-import DateFormatInput from 'material-ui-next-datepicker'
+import {DateFormatInput, TimeFormatInput} from 'material-ui-next-pickers'
 
 import screenStore from '../../store/screen'
 import CommonPage from '../common-page'
@@ -40,26 +40,34 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
   },
   form: {
     padding: '32px 0'
+  },
+  inputContainer: {
+    padding: '8px 0'
   }
 })
 @(withStyles as any)(styles)
-class MaterialUIDatepickerPage extends ReSub.ComponentBase<MaterialUIDatepickerPageProps, MaterialUIDatepickerPageState> {
-  protected _buildState(props:{}, initial:boolean):MaterialUIDatepickerPageState {
+class MaterialUIPickersPage extends ReSub.ComponentBase<MaterialUIPickersPageProps, MaterialUIPickersPageState> {
+  protected _buildState(props:{}, initial:boolean):MaterialUIPickersPageState {
     return {
       screenType: screenStore.type(),
-      date: initial? undefined:this.state.date
+      date: initial? undefined:this.state.date,
+      time: initial? undefined:this.state.time
     }
   }
-  onChange = (date:Date) => {
-    console.log(date)
+  onChangeDate = (date:Date) => {
+    console.log('Date: ', date)
     this.setState({date})
+  }
+  onChangeTime = (time:Date) => {
+    console.log('Time: ', time)
+    this.setState({time})
   }
   goBack = () => {
     this.props.history.push('/')
   }
   render() {
     const {classes} = this.props
-    const {screenType, date} = this.state
+    const {screenType, date, time} = this.state
     return (
       <CommonPage>
         <div className={classes.row}>
@@ -69,7 +77,12 @@ class MaterialUIDatepickerPage extends ReSub.ComponentBase<MaterialUIDatepickerP
           </Typography>
           <div className={classes.divider}/>
           <form className={classes.form}>
-            <DateFormatInput name='date-input' value={date} onChange={this.onChange} dialog={screenType === 'xs-phone'}/>
+            <div className={classes.inputContainer}>
+              <DateFormatInput name='date-input' key='date-input' value={date} onChange={this.onChangeDate} dialog={screenType === 'xs-phone'}/>
+            </div>
+            <div className={classes.inputContainer}>
+              <TimeFormatInput name='time-input' key='time-input' value={time} onChange={this.onChangeTime} dialog={screenType === 'xs-phone'}/>
+            </div>
           </form>
           <Button href='https://github.com/chingyawhao/material-ui-next-datepicker'>VISIT MY PROJECT</Button>
         </div>
@@ -77,11 +90,12 @@ class MaterialUIDatepickerPage extends ReSub.ComponentBase<MaterialUIDatepickerP
     )
   } 
 }
-interface MaterialUIDatepickerPageProps extends React.Props<{}>, StyledComponentProps, RouteComponentProps<{}> {
+interface MaterialUIPickersPageProps extends React.Props<{}>, StyledComponentProps, RouteComponentProps<{}> {
 }
-interface MaterialUIDatepickerPageState {
+interface MaterialUIPickersPageState {
   screenType: 'xl-desktop' | 'lg-desktop' | 'md-desktop' | 'sm-tablet' | 'xs-phone'
   date: Date
+  time: Date
 }
 
-export default MaterialUIDatepickerPage
+export default MaterialUIPickersPage
