@@ -13,28 +13,28 @@
  *  @link      http://websemantics.ca
  *  @author    Adnan M.Sagar, PhD. <adnan@websemantics.ca>
  *
- *  @param {Object} l, the document current location
+ *  @param {Object} location, the document current location
  *  @param {Boolean} projectPages, true by default, https://help.github.com/articles/user-organization-and-project-pages
  *
  */
 
-;(function(l, projectPages) {
+((location, projectPages) => {
 
-  var repo = projectPages ? '/' + l.pathname.split('/')[1] : ''
+  var repo = projectPages ? '/' + location.pathname.split('/')[1] : ''
 
    /* redirect all 404 trafic to index.html */
    function redirect() {
-     l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + repo + '/?' +
-              (l.pathname ? 'p=' + l.pathname.replace(/&/g, '~and~').replace(repo, '') : '') +
-              (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-              (l.hash))
+    location.replace(location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + repo + '/?' +
+              (location.pathname ? 'p=' + location.pathname.replace(/&/g, '~and~').replace(repo, '') : '') +
+              (location.search ? '&q=' + location.search.slice(1).replace(/&/g, '~and~') : '') +
+              (location.hash))
    }
 
    /* resolve 404 redirects into internal routes */
    function resolve() {
-     if (l.search) {
+     if (location.search) {
        var q:any = {}
-       l.search.slice(1).split('&').forEach(function(v) {
+       location.search.slice(1).split('&').forEach(function(v) {
          var a = v.split('=')
          q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&')
        })
@@ -42,7 +42,7 @@
          window.history.replaceState(null, null,
            repo + (q.p || '') +
            (q.q ? ('?' + q.q) : '') +
-           l.hash
+           location.hash
          )
        }
      }
@@ -51,4 +51,4 @@
   /* if current document is 404 page page, redirect to index.html otherwise resolve */
   document.title === '404' ? redirect() : resolve()
 
-}(window.location, false))
+})(window.location, false)

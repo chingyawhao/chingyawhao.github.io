@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {withStyles, Theme, StyledComponentProps} from 'material-ui/styles'
-import {grey} from 'material-ui/colors'
-import {CircularProgress} from 'material-ui/Progress'
+import {withStyles, Theme, StyledComponentProps} from '@material-ui/core/styles'
+import {grey} from '@material-ui/core/colors'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const styles = (theme:Theme):Record<string, React.CSSProperties> => ({
   loading: {

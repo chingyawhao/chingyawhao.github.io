@@ -1,12 +1,13 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import * as ReSub from 'resub'
-import {withStyles, Theme, StyleRules, StyleRulesCallback, StyledComponentProps} from 'material-ui/styles'
-import {pink, red, blueGrey, lightGreen} from 'material-ui/colors'
-import Typography from 'material-ui/Typography'
-import Avatar from 'material-ui/Avatar'
-import ButtonBase from 'material-ui/ButtonBase'
-import GridList, {GridListTile} from 'material-ui/GridList'
+import {withStyles, Theme, StyleRules, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
+import {pink, red, blue, lightGreen} from '@material-ui/core/colors'
+import Typography from '@material-ui/core/Typography'
+import Avatar from '@material-ui/core/Avatar'
+import ButtonBase from '@material-ui/core/ButtonBase'
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
 
 import screenStore from '../../store/screen'
 
@@ -43,7 +44,7 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
     color: red[800]
   },
   materialUIBase: {
-    color: blueGrey[800]
+    color: blue[800]
   },
   aiChanBase: {
     color: lightGreen[800]
@@ -52,7 +53,7 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
     background: red[50]
   },
   materialUIActive: {
-    background: blueGrey[50]
+    background: blue[50]
   },
   aiChanActive: {
     background: lightGreen[50]
@@ -75,9 +76,6 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
   },
   avatarBackgroundActive: {
     borderRadius: '3px',
-    transform: 'scale(3)'
-  },
-  materialUIZoom: {
     transform: 'scale(3)'
   },
   imageAvatar: {
@@ -139,7 +137,6 @@ class AboutSection extends ReSub.ComponentBase<AboutSectionProps, AboutSectionSt
               base: classes.materialUIBase,
               link: '/material-ui-pickers',
               avatar: 'https://material-ui-next.com/static/images/material-ui-logo.svg',
-              avatarZoom: classes.materialUIZoom,
               activeColor: classes.materialUIActive,
               name: 'Material UI Datepicker'
             }, {
@@ -161,7 +158,7 @@ class AboutSection extends ReSub.ComponentBase<AboutSectionProps, AboutSectionSt
                     <div className={[classes.avatarBackground, tile.activeColor, active === tile.id? classes.avatarBackgroundActive:''].join(' ')}/>
                     <Avatar src={tile.avatar} classes={{
                       root: classes.avatar,
-                      img: [classes.imageAvatar, tile.avatarZoom || ''].join(' ')
+                      img: classes.imageAvatar
                     }}/>
                   </div>
                   <Typography classes={{root:classes.projectName}} variant='subheading'>
