@@ -17,7 +17,7 @@
     "@material-ui/icons": "^1.0.0",
     "classnames": "^2.2.5",
     "express": "^4.16.3",
-    "material-ui-next-pickers": "^0.0.9",
+    "material-ui-next-pickers": "^0.0.10",
     "mdi-material-ui": "^5.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
