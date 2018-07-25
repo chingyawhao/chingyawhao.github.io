@@ -4,10 +4,12 @@ import {grey} from '@material-ui/core/colors'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 const styles = (theme:Theme):Record<string, React.CSSProperties> => ({
+  container: {
+    position: 'relative',
+    width: '100%'
+  },
   loading: {
-    minHeight: '100vh',
-    minWidth: '100vw',
-    backgroundColor: grey[800],
+    minHeight: '500px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
@@ -31,7 +33,7 @@ class AsyncComponent extends React.Component<AsyncComponentProps, AsyncComponent
     const {props, classes} = this.props
     const {Component} = this.state
     return (
-      <div>
+      <div className={classes.container}>
         {Component? <Component {...props}/>:<div className={classes.loading}>
           <CircularProgress/>
         </div>}

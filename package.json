@@ -23,6 +23,7 @@
     "react-dom": "^16.4.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-transition-group": "^2.4.0",
     "resub": "^1.0.8",
     "typescript": "^2.7.2"
   },
