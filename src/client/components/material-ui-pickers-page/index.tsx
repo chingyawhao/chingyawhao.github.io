@@ -10,12 +10,11 @@ import {ArrowBack as ArrowBackIcon} from '@material-ui/icons'
 import {DateFormatInput, TimeFormatInput} from 'material-ui-next-pickers'
 
 import screenStore from '../../store/screen'
-import CommonPage from '../common-page'
 
 const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
   row: {
     position: 'relative',
-    width: '100%',
+    width: 'calc(100% - 64px)',
     display: 'flex',
     flexDirection: 'column',
     padding: '32px',
@@ -47,11 +46,27 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
 })
 @(withStyles as any)(styles)
 class MaterialUIPickersPage extends ReSub.ComponentBase<MaterialUIPickersPageProps, MaterialUIPickersPageState> {
+  page:Element
   protected _buildState(props:{}, initial:boolean):MaterialUIPickersPageState {
     return {
+      screenSize: screenStore.size(),
       screenType: screenStore.type(),
       date: initial? undefined:this.state.date,
       time: initial? undefined:this.state.time
+    }
+  }
+  shouldComponentUpdate(nextProps:MaterialUIPickersPageProps, nextState:MaterialUIPickersPageState) {
+    if(this.page && this.state.screenSize !== nextState.screenSize) {
+      this.props.changePageHeight(this.page.clientHeight)
+      return false
+    } else {
+      return true
+    }
+  }
+  mountPage = (page) => {
+    this.page = ReactDOM.findDOMNode(page) as Element
+    if(this.page) {
+      this.props.changePageHeight(this.page.clientHeight)
     }
   }
   onChangeDate = (date:Date) => {
@@ -69,30 +84,30 @@ class MaterialUIPickersPage extends ReSub.ComponentBase<MaterialUIPickersPagePro
     const {classes} = this.props
     const {screenType, date, time} = this.state
     return (
-      <CommonPage>
-        <div className={classes.row}>
-          <IconButton onClick={this.goBack} className={classes.backButton}><ArrowBackIcon/></IconButton>
-          <Typography className={classes.title} variant='display1' color='inherit' component='h2'>
-            Material UI Next Datepicker
-          </Typography>
-          <div className={classes.divider}/>
-          <form className={classes.form}>
-            <div className={classes.inputContainer}>
-              <DateFormatInput name='date-input' key='date-input' value={date} onChange={this.onChangeDate} dialog={screenType === 'xs-phone'}/>
-            </div>
-            <div className={classes.inputContainer}>
-              <TimeFormatInput name='time-input' key='time-input' value={time} onChange={this.onChangeTime} dialog={screenType === 'xs-phone'}/>
-            </div>
-          </form>
-          <Button href='https://github.com/chingyawhao/material-ui-next-datepicker'>VISIT MY PROJECT</Button>
-        </div>
-      </CommonPage>
+      <div ref={this.mountPage} className={classes.row}>
+        <IconButton onClick={this.goBack} className={classes.backButton}><ArrowBackIcon/></IconButton>
+        <Typography className={classes.title} variant='display1' color='inherit' component='h2'>
+          Material UI Next Datepicker
+        </Typography>
+        <div className={classes.divider}/>
+        <form className={classes.form}>
+          <div className={classes.inputContainer}>
+            <DateFormatInput name='date-input' key='date-input' value={date} onChange={this.onChangeDate} dialog={screenType === 'xs-phone'}/>
+          </div>
+          <div className={classes.inputContainer}>
+            <TimeFormatInput name='time-input' key='time-input' value={time} onChange={this.onChangeTime} dialog={screenType === 'xs-phone'}/>
+          </div>
+        </form>
+        <Button href='https://github.com/chingyawhao/material-ui-next-datepicker'>VISIT MY PROJECT</Button>
+      </div>
     )
   } 
 }
 interface MaterialUIPickersPageProps extends React.Props<{}>, StyledComponentProps, RouteComponentProps<{}> {
+  changePageHeight: (height:number) => void
 }
 interface MaterialUIPickersPageState {
+  screenSize: number
   screenType: 'xl-desktop' | 'lg-desktop' | 'md-desktop' | 'sm-tablet' | 'xs-phone'
   date: Date
   time: Date

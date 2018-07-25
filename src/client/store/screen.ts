@@ -2,6 +2,7 @@ import {StoreBase, AutoSubscribeStore, autoSubscribe} from 'resub'
 
 @AutoSubscribeStore
 export class ScreenStore extends StoreBase {
+  private _size:number
   private _type:'xl-desktop' | 'lg-desktop' | 'md-desktop' | 'sm-tablet' | 'xs-phone'
 
   constructor() {
@@ -10,14 +11,14 @@ export class ScreenStore extends StoreBase {
   }
 
   trackScreenType = () => {
-    const width = window.innerWidth
-    if(width >= 1920) {
+    this._size = window.innerWidth
+    if(this._size >= 1920) {
       this._type = 'xl-desktop'
-    } else if(width >= 1280) {
+    } else if(this._size >= 1280) {
       this._type = 'lg-desktop'
-    } else if(width >= 960) {
+    } else if(this._size >= 960) {
       this._type = 'md-desktop'
-    } else if(width >= 600) {
+    } else if(this._size >= 600) {
       this._type = 'sm-tablet'
     } else {
       this._type = 'xs-phone'
@@ -29,6 +30,11 @@ export class ScreenStore extends StoreBase {
     window.addEventListener('resize', this.trackScreenType)
   }
 
+  @autoSubscribe
+  size() {
+    return this._size
+  }
+  
   @autoSubscribe
   type() {
     return this._type

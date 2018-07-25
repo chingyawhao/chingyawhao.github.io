@@ -8,15 +8,13 @@ import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import {ArrowBack as ArrowBackIcon} from '@material-ui/icons'
 
-import * as Hao from '../../../asset/img/hao.svg'
 import screenStore from '../../store/screen'
-import CommonPage from '../common-page'
 import Materialize from './materialize'
 
 const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
   row: {
     position: 'relative',
-    width: 'calc(100% + 64px)',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     padding: '32px',
@@ -48,9 +46,25 @@ const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => 
 })
 @(withStyles as any)(styles)
 class MaterializeClockpickerPage extends ReSub.ComponentBase<MaterializeClockpickerPageProps, MaterializeClockpickerPageState> {
+  page: Element
   protected _buildState(props:{}, initial:boolean):MaterializeClockpickerPageState {
     return {
+      screenSize: screenStore.size(),
       screenType: screenStore.type()
+    }
+  }
+  shouldComponentUpdate(nextProps:MaterializeClockpickerPageProps, nextState:MaterializeClockpickerPageState) {
+    if(this.page && this.state.screenSize !== nextState.screenSize) {
+      this.props.changePageHeight(this.page.clientHeight)
+      return false
+    } else {
+      return true
+    }
+  }
+  mountPage = (page) => {
+    this.page = ReactDOM.findDOMNode(page) as Element
+    if(this.page) {
+      this.props.changePageHeight(this.page.clientHeight)
     }
   }
   pickATime = () => {
@@ -63,6 +77,9 @@ class MaterializeClockpickerPage extends ReSub.ComponentBase<MaterializeClockpic
         darktheme: true,
         container: $('body')
       })
+      if(this.page) {
+        this.props.changePageHeight(this.page.clientHeight)
+      }
     }
   }
   goBack = () => {
@@ -71,30 +88,30 @@ class MaterializeClockpickerPage extends ReSub.ComponentBase<MaterializeClockpic
   render() {
     const {classes} = this.props
     const {screenType} = this.state
-    return (
-      <CommonPage>
-        <Materialize onLoad={this.pickATime}/>
-        <div className={classes.row}>
-          <IconButton onClick={this.goBack} className={classes.backButton}><ArrowBackIcon/></IconButton>
-          <Typography className={classes.title} variant='display1' color='inherit' component='h2'>
-            Materialize Clockpicker
-          </Typography>
-          <div className={classes.divider}/>
-          <form className={['row', classes.form].join(' ')}>
-            <div className='input-field col s12'>
-              <label htmlFor='timepicker'>Pick your time</label>
-              <input id='timepicker' className='timepicker' type='time'/>
-            </div>
-          </form>
-          <Button classes={{label:classes.button}} href='https://github.com/chingyawhao/materialize-clockpicker'>VISIT MY PROJECT</Button>
-        </div>
-      </CommonPage>
-    )
+    return ([
+      <Materialize key='materialize' onLoad={this.pickATime}/>,
+      <div key='content' ref={this.mountPage} className={classes.row}>
+        <IconButton onClick={this.goBack} className={classes.backButton}><ArrowBackIcon/></IconButton>
+        <Typography className={classes.title} variant='display1' color='inherit' component='h2'>
+          Materialize Clockpicker
+        </Typography>
+        <div className={classes.divider}/>
+        <form className={['row', classes.form].join(' ')}>
+          <div className='input-field col s12'>
+            <label htmlFor='timepicker'>Pick your time</label>
+            <input id='timepicker' className='timepicker' type='time'/>
+          </div>
+        </form>
+        <Button classes={{label:classes.button}} href='https://github.com/chingyawhao/materialize-clockpicker'>VISIT MY PROJECT</Button>
+      </div>
+    ])
   } 
 }
 interface MaterializeClockpickerPageProps extends React.Props<{}>, StyledComponentProps, RouteComponentProps<{}> {
+  changePageHeight: (height:number) => void
 }
 interface MaterializeClockpickerPageState {
+  screenSize: number
   screenType: 'xl-desktop' | 'lg-desktop' | 'md-desktop' | 'sm-tablet' | 'xs-phone'
 }
 
