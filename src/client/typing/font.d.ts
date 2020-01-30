@@ -1,4 +1,4 @@
 declare module '*.ttf' {
   const font:string
-  export = font
+  export default font
 }

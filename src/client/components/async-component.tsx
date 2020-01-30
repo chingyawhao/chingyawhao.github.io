@@ -1,9 +1,9 @@
 import * as React from 'react'
-import {withStyles, Theme, StyledComponentProps} from '@material-ui/core/styles'
+import {withStyles, Theme, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
 import {grey} from '@material-ui/core/colors'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-const styles = (theme:Theme):Record<string, React.CSSProperties> => ({
+const styles:StyleRulesCallback<Theme, AsyncComponentProps, string> = theme => ({
   container: {
     position: 'relative',
     width: '100%'

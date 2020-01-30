@@ -1,13 +1,12 @@
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
 import {RouteComponentProps} from 'react-router'
 import * as ReSub from 'resub'
-import {withStyles, Theme, StyleRules, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
+import {withStyles, Theme, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
 import screenStore from '../../store/screen'
 
-const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
+const styles:StyleRulesCallback<Theme, NotFoundPageProps, string> = theme  => ({
   row: {
     display: 'flex',
     flexDirection: 'column',
@@ -34,7 +33,7 @@ class NotFoundPage extends ReSub.ComponentBase<NotFoundPageProps, NotFoundPageSt
     const {classes} = this.props
     return (
       <div className={classes.row}>
-        <Typography variant='display1' color='inherit' component='h2'>
+        <Typography variant='h4' color='inherit' component='h2'>
           404
         </Typography>
         <div className={classes.divider}/>

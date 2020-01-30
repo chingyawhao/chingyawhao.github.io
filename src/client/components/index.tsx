@@ -1,9 +1,8 @@
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
 import {RouteComponentProps} from 'react-router'
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import {TransitionGroup, CSSTransition} from 'react-transition-group'
-import {withStyles, Theme, StyleRules, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
+import {withStyles, Theme, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
 import {grey} from '@material-ui/core/colors'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
@@ -11,7 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import {GithubCircle as GithubIcon, Linkedin as LinkedinIcon, Deviantart as DeviantartIcon} from 'mdi-material-ui'
 
-import * as Hao from '../../asset/img/hao.svg'
+import Hao from '../../asset/img/hao.svg'
 import AsyncComponent from './async-component'
 
 const landingPage = () => import(/* webpackChunkName:'landing' */ './landing-page')
@@ -20,7 +19,7 @@ const materialUIPickersPage = () => import(/* webpackChunkName:'material-ui-pick
 const notFoundPage = () => import(/* webpackChunkName:'404-page' */ './404-page')
 
 const blinkerID = Math.ceil(Math.random() * 10000)
-const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
+const styles:StyleRulesCallback<Theme, LandingPageProps, string> = theme => ({
   container: {
     width: '100vw',
     minHeight: '100vh',
@@ -166,7 +165,7 @@ class LandingPage extends React.Component<LandingPageProps, LandingPageState> {
             <div className={classes.headerContainer}>
               <div className={classes.headerBrand}>
                 <img src={Hao} className={classes.headerBrandLogo}/>
-                <Typography variant='display3' classes={{root:classes.headerText}}>
+                <Typography variant='h2' classes={{root:classes.headerText}}>
                   {'CHING\n'}
                   {'YAW  \n'}
                   {'HAO'}
