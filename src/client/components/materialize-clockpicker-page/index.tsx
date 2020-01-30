@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import {RouteComponentProps} from 'react-router'
 import * as ReSub from 'resub'
-import {withStyles, Theme, StyleRules, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
+import {withStyles, Theme, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
@@ -11,7 +11,7 @@ import {ArrowBack as ArrowBackIcon} from '@material-ui/icons'
 import screenStore from '../../store/screen'
 import Materialize from './materialize'
 
-const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
+const styles:StyleRulesCallback<Theme, MaterializeClockpickerPageProps, string> = theme => ({
   row: {
     position: 'relative',
     width: '100%',
@@ -92,7 +92,7 @@ class MaterializeClockpickerPage extends ReSub.ComponentBase<MaterializeClockpic
       <Materialize key='materialize' onLoad={this.pickATime}/>,
       <div key='content' ref={this.mountPage} className={classes.row}>
         <IconButton onClick={this.goBack} className={classes.backButton}><ArrowBackIcon/></IconButton>
-        <Typography className={classes.title} variant='display1' color='inherit' component='h2'>
+        <Typography className={classes.title} variant='h4' color='inherit' component='h2'>
           Materialize Clockpicker
         </Typography>
         <div className={classes.divider}/>

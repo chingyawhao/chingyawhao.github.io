@@ -2,12 +2,12 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import {RouteComponentProps} from 'react-router'
 import * as ReSub from 'resub'
-import {withStyles, Theme, StyleRules, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
+import {withStyles, Theme, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
 
 import screenStore from '../../store/screen'
 import AboutSection from './about-section'
 
-const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
+const styles:StyleRulesCallback<Theme, LandingPageProps, string> = theme => ({
 })
 @(withStyles as any)(styles)
 class LandingPage extends ReSub.ComponentBase<LandingPageProps, LandingPageState> {

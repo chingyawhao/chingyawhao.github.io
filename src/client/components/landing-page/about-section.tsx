@@ -1,8 +1,7 @@
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
 import * as ReSub from 'resub'
-import {withStyles, Theme, StyleRules, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
-import {pink, red, blue, lightGreen} from '@material-ui/core/colors'
+import {withStyles, Theme, StyleRulesCallback, StyledComponentProps} from '@material-ui/core/styles'
+import {red, blue, lightGreen} from '@material-ui/core/colors'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
 import ButtonBase from '@material-ui/core/ButtonBase'
@@ -11,7 +10,7 @@ import GridListTile from '@material-ui/core/GridListTile'
 
 import screenStore from '../../store/screen'
 
-const styles = (theme:Theme):StyleRules<string> | StyleRulesCallback<string> => ({
+const styles:StyleRulesCallback<Theme, AboutSectionProps, string> = theme => ({
   row: {
     display: 'flex',
     flexDirection: 'column',
@@ -106,7 +105,7 @@ class AboutSection extends ReSub.ComponentBase<AboutSectionProps, AboutSectionSt
     return (
       <div>
         <div className={classes.row}>
-          <Typography variant='display1' color='inherit' component='h2'>
+          <Typography variant='h4' color='inherit' component='h2'>
             Who Am I
           </Typography>
           <div className={classes.divider}/>
@@ -120,7 +119,7 @@ class AboutSection extends ReSub.ComponentBase<AboutSectionProps, AboutSectionSt
           </Typography>
         </div>
         <div className={classes.row}>
-          <Typography variant='display1' color='inherit' component='h2'>
+          <Typography variant='h4' color='inherit' component='h2'>
             My Projects
           </Typography>
           <div className={classes.divider}/>
@@ -136,7 +135,7 @@ class AboutSection extends ReSub.ComponentBase<AboutSectionProps, AboutSectionSt
               id: 'material-ui',
               base: classes.materialUIBase,
               link: '/material-ui-pickers',
-              avatar: 'https://material-ui-next.com/static/images/material-ui-logo.svg',
+              avatar: 'https://material-ui.com/static/logo_raw.svg',
               activeColor: classes.materialUIActive,
               name: 'Material UI Datepicker'
             }, {
@@ -161,7 +160,7 @@ class AboutSection extends ReSub.ComponentBase<AboutSectionProps, AboutSectionSt
                       img: classes.imageAvatar
                     }}/>
                   </div>
-                  <Typography classes={{root:classes.projectName}} variant='subheading'>
+                  <Typography classes={{root:classes.projectName}} variant='subtitle1'>
                     {tile.name}
                   </Typography>
                 </ButtonBase>

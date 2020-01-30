@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
-import * as SegoeMonoTTF from '../../asset/font/segoe-mono.ttf'
+import SegoeMonoTTF from '../../asset/font/segoe-mono.ttf'
 
 const getFontType = (link:string) => {
   switch(link.substring(link.lastIndexOf('.') + 1)) {
@@ -13,6 +13,7 @@ const fontSrc = (...links:string[]) => links.map(link => 'url("' + link + '") fo
 
 class FontStyleComponent extends React.Component<FontStyleComponentProps, FontStyleComponentState> {
   render() {
+    console.log(SegoeMonoTTF)
     return ReactDOM.createPortal(
       <style>{[{
         size: 400,
