@@ -325,3 +325,36 @@ Cards are sample data and say so in a muted line.
 - Variant C: `[hidden] { display: none !important; }` — the "Done exploring"
   button was visible at load because `.btn { display: flex }` beat the `hidden`
   attribute.
+
+---
+
+# Revision 4 — MRB is a team (2026-09-20, copy only)
+
+Owner correction: MyRumahBaru is a team; the page must not read as if he built
+the company alone. Rule: **"we" for anything the company did; "I" only for
+what he personally owns as CTO.** These replace the earlier copy verbatim.
+
+**Hero positioning**
+> I build consumer and marketplace products. Ten years in — five of them as
+> the first engineer and later Head of Engineering at a proptech startup that
+> grew to RM266M GDV — I now lead product, engineering and AI at MyRumahBaru,
+> which I co-founded in 2024.
+
+**Now — MyRumahBaru**
+> We started MyRumahBaru in April 2024 and raised a USD 200K pre-seed. The
+> team built the product from zero; I own product engineering, geospatial
+> infrastructure and our production LLM agent systems.
+
+**Hero map caption**
+> This map runs on MyRumahBaru's stack — MapLibre, Protomaps.
+
+**Didian stat-tile labels** (where a variant uses them)
+> RM266M — GDV on the platform we built at Didian
+> ~300 — agents served across Malaysia
+> 5½ yrs — first engineer → Head of Engineering
+
+The four "Now" items (Sarah per Revision 3, Lead funnel, Geospatial layer,
+Search) stay as subject-less fragments after their bold lead-in, so they claim
+neither "I" nor "we". Under-the-hood / "Also at MyRumahBaru" style section
+labels are fine. Any remaining "I built … for MyRumahBaru" phrasing anywhere
+on the page becomes "we built" or is made subject-less.
