@@ -1,4 +1,4 @@
-/* chingyawhao.github.io — theme, map hero, Sarah chat, scroll reveals. No dependencies beyond MapLibre. */
+/* chingyawhao.github.io — theme, map hero, Sarah web-chat demo, scroll reveals. No dependencies beyond MapLibre. */
 'use strict';
 
 const TILES_DARK = 'https://tiles.openfreemap.org/styles/dark';
@@ -14,21 +14,23 @@ const PINS = [
   { lngLat: [101.717, 3.198], label: 'Setapak', text: '3-bed apartment · from RM320K' },
 ];
 
-/* Fixed script from the spec, verbatim. */
-const SCRIPT = [
-  ['lead', 'Hi, I saw the ad for the new condo in Cheras. Is it still open for booking?'],
-  ['sarah', "Hi! Yes it is 😊 I'm Sarah from MyRumahBaru. A few quick questions so I can match you with the right unit — what's your budget?"],
-  ['lead', 'Around 500k'],
-  ['sarah', 'Got it, up to RM500K. How many bedrooms are you looking for?'],
-  ['lead', '3, for family'],
-  ['sarah', 'Noted — 3 bedrooms. Is this your first home purchase?'],
-  ['lead', 'Yes'],
-  ['sarah', 'Great, you may qualify for first-time buyer incentives. Would you like to visit the show unit this weekend?'],
-  ['lead', 'Saturday can'],
-  ['sarah', 'Saturday it is. 11 AM or 3 PM?'],
-  ['lead', '3pm'],
-  ['sarah', "Booked ✅ Saturday, 3:00 PM at the Cheras sales gallery with Amirah. She'll confirm with you tomorrow morning. See you there!"],
+/* Fixed script from the spec, verbatim. A Sarah turn is a list of parts: strings, or the CARDS array. */
+const CARDS = [
+  { title: 'Curvo Residence', area: 'Cheras', spec: '3 bed · 2 bath · 952–1,345 sqft', price: 'from RM520K', tag: 'New launch' },
+  { title: 'Residensi Bukit Cheras', area: 'Cheras', spec: '3 bed · 2 bath · 1,050 sqft', price: 'RM468K', tag: 'Subsale' },
 ];
+const SCRIPT = [
+  ['sarah', "Hi! I'm Sarah 👋 Tell me what you're looking for in a home"],
+  ['user', 'Looking to buy a 3-bedroom condo near an LRT, budget around 500k'],
+  ['sarah', 'Got it — 3 bedrooms, near LRT, up to RM500K. Is this for your own stay or an investment?'],
+  ['user', 'Own stay, small family'],
+  ['sarah', "Then I'd weigh schools and a proper car park over rental yield. Which side of KL — Cheras/Ampang, or Setapak/Wangsa Maju?"],
+  ['user', 'Cheras side'],
+  ['sarah', 'Two that fit well:', CARDS, "Curvo is a touch over your number, but the developer is covering legal fees right now, so upfront it lands under. Want me to set up viewings with Amirah? She's the verified agent for both."],
+  ['user', 'Yes, Saturday afternoon'],
+  ['sarah', "Done — Saturday, 3:00 PM. Amirah will confirm with you here. I've pinned both on your map 📍"],
+];
+const CHERAS_PIN = 0; // index into PINS; both listing cards target it
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (id) => document.getElementById(id);
@@ -38,6 +40,7 @@ document.documentElement.classList.add('js');
 /* ---------- theme ---------- */
 
 let map = null;
+let showPin = () => {}; // set by initMap: opens PINS[i]'s popup
 const themeBtn = $('theme');
 
 function applyTheme(theme) {
@@ -112,6 +115,20 @@ function initMap() {
   }
   map.on('moveend', drift);
 
+  /* Chat "View on map": open the pin's popup and bring it into the part of the map
+     not covered by the hero panel; drift pauses so it stays put. */
+  showPin = (i) => {
+    popups.forEach((p) => p.remove());
+    popups[i].addTo(map);
+    drifting = false;
+    map.easeTo({
+      center: PINS[i].lngLat,
+      padding: { bottom: Math.min(panel.offsetHeight, map.getContainer().clientHeight * 0.5) },
+      duration: reducedMotion ? 0 : 1200,
+      essential: true,
+    });
+  };
+
   function setExploring(on) {
     hero.classList.toggle('is-exploring', on);
     HANDLERS.forEach((h) => map[h][on ? 'enable' : 'disable']());
@@ -152,21 +169,50 @@ const thread = $('thread');
 const replay = $('replay');
 let run = 0; // increments on each play so a stale timer chain exits early
 
-function stamp(i) {
-  const m = 42 + i; // 10:42 onwards, one minute per message
-  return `10:${m}`;
+function card({ title, area, spec, price, tag }) {
+  const el = document.createElement('div');
+  el.className = 'listing';
+  const a = document.createElement('a');
+  a.href = '#top';
+  a.className = 'listing__map';
+  a.textContent = 'View on map';
+  a.addEventListener('click', () => showPin(CHERAS_PIN)); // the anchor itself does the scroll
+  el.innerHTML = `<b>${title}</b><span>${area} · ${spec}</span><span class="listing__price">${price}<em>${tag}</em></span><small>Sample listing</small>`;
+  el.append(a);
+  return el;
 }
 
 function bubble(i) {
-  const [who, text] = SCRIPT[i];
+  const [who, ...parts] = SCRIPT[i];
   const li = document.createElement('li');
   li.className = `msg msg--${who}`;
   const sr = document.createElement('span');
   sr.className = 'sr';
-  sr.textContent = who === 'sarah' ? 'Sarah: ' : 'Lead: ';
-  const t = document.createElement('time');
-  t.textContent = stamp(i);
-  li.append(sr, text, t);
+  sr.textContent = who === 'sarah' ? 'Sarah: ' : 'You: ';
+  li.append(sr);
+  parts.forEach((part) => {
+    if (typeof part === 'string') {
+      const p = document.createElement('p');
+      p.textContent = part;
+      li.append(p);
+    } else {
+      const wrap = document.createElement('div');
+      wrap.className = 'listings';
+      wrap.append(...part.map(card));
+      li.append(wrap);
+    }
+  });
+  return li;
+}
+
+function chip(i) {
+  const li = document.createElement('li');
+  li.className = 'chips';
+  li.setAttribute('aria-hidden', 'true');
+  const span = document.createElement('span');
+  span.className = 'chip';
+  span.textContent = SCRIPT[i][1];
+  li.append(span);
   return li;
 }
 
@@ -207,6 +253,14 @@ function play() {
       } else {
         await wait(600);
         if (id !== run) return;
+        const c = chip(i);
+        thread.append(c);
+        scrollThread();
+        await wait(250);
+        c.firstChild.classList.add('is-on');
+        await wait(400);
+        if (id !== run) return;
+        c.remove();
       }
       thread.append(bubble(i));
       scrollThread();
@@ -216,8 +270,8 @@ function play() {
   })();
 }
 
-const phone = thread && thread.closest('.phone');
-if (thread && replay && phone) {
+const chat = $('chat');
+if (thread && replay && chat) {
   replay.addEventListener('click', play);
   const chatObserver = new IntersectionObserver((entries) => {
     if (entries.some((e) => e.isIntersecting)) {
@@ -225,7 +279,7 @@ if (thread && replay && phone) {
       play();
     }
   }, { threshold: 0.4 });
-  chatObserver.observe(phone);
+  chatObserver.observe(chat);
 }
 
 /* ---------- scroll reveals ---------- */

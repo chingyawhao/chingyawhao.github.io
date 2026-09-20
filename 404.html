@@ -5,16 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Not found · Ching Yaw Hao</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf9f6">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121212">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f6f7">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0b0c">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
+<script>
+(function () {
+  var t;
+  try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+  document.documentElement.dataset.theme = t;
+})();
+</script>
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<main class="wrap" style="padding-top:clamp(4rem,12vh,8rem)">
-  <h1>Nothing here.</h1>
-  <p><a href="/">Back to the front page</a></p>
+<main class="sec">
+  <div class="wrap prose">
+    <p class="eyebrow">404</p>
+    <h1>Nothing here.</h1>
+    <p><a href="/">Back to the front page</a></p>
+  </div>
 </main>
 </body>
 </html>
