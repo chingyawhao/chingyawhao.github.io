@@ -47,6 +47,9 @@ function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   if (themeBtn) themeBtn.setAttribute('aria-pressed', String(theme === 'dark'));
   try { localStorage.setItem('theme', theme); } catch (e) { /* private mode: ignore */ }
+  document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
+    m.content = theme === 'dark' ? '#0b0b0c' : '#f6f6f7';
+  });
   if (map) map.setStyle(theme === 'dark' ? TILES_DARK : TILES_LIGHT);
 }
 
@@ -111,7 +114,7 @@ function initMap() {
   function drift() {
     if (!drifting) return;
     stop = (stop + 1) % DRIFT_STOPS.length;
-    map.easeTo({ center: DRIFT_STOPS[stop], duration: 28000, easing: (t) => t, essential: false });
+    map.easeTo({ center: DRIFT_STOPS[stop], duration: 28000, easing: (t) => t, essential: true }); // essential: MapLibre would otherwise zero the duration under reduced motion and moveend would recurse synchronously
   }
   map.on('moveend', drift);
 
@@ -145,7 +148,6 @@ function initMap() {
       drift();
     }
   }
-  explore.hidden = false;
   explore.addEventListener('click', () => setExploring(!hero.classList.contains('is-exploring')));
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && hero.classList.contains('is-exploring')) setExploring(false);
@@ -153,6 +155,7 @@ function initMap() {
 
   map.once('load', () => {
     hero.classList.add('is-live');
+    explore.hidden = false;
     drift();
   });
   map.on('error', (e) => {
@@ -178,13 +181,13 @@ function card({ title, area, spec, price, tag }) {
   a.textContent = 'View on map';
   a.addEventListener('click', () => showPin(CHERAS_PIN)); // the anchor itself does the scroll
   el.innerHTML = `<b>${title}</b><span>${area} · ${spec}</span><span class="listing__price">${price}<em>${tag}</em></span><small>Sample listing</small>`;
-  el.append(a);
+  if (map) el.append(a);
   return el;
 }
 
 function bubble(i) {
   const [who, ...parts] = SCRIPT[i];
-  const li = document.createElement('li');
+  const li = document.createElement('div');
   li.className = `msg msg--${who}`;
   const sr = document.createElement('span');
   sr.className = 'sr';
@@ -206,7 +209,7 @@ function bubble(i) {
 }
 
 function chip(i) {
-  const li = document.createElement('li');
+  const li = document.createElement('div');
   li.className = 'chips';
   li.setAttribute('aria-hidden', 'true');
   const span = document.createElement('span');
@@ -217,7 +220,7 @@ function chip(i) {
 }
 
 function typing() {
-  const li = document.createElement('li');
+  const li = document.createElement('div');
   li.className = 'msg typing';
   li.setAttribute('aria-hidden', 'true');
   li.append(...[0, 1, 2].map(() => document.createElement('i')));
@@ -272,7 +275,7 @@ function play() {
 
 const chat = $('chat');
 if (thread && replay && chat) {
-  replay.addEventListener('click', play);
+  replay.addEventListener('click', () => { thread.setAttribute('aria-live', 'polite'); play(); });
   const chatObserver = new IntersectionObserver((entries) => {
     if (entries.some((e) => e.isIntersecting)) {
       chatObserver.disconnect();

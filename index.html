@@ -10,8 +10,7 @@
 <meta property="og:title" content="Ching Yaw Hao">
 <meta property="og:description" content="Co-founder &amp; CTO at MyRumahBaru. Ten years building consumer and marketplace products in Malaysia.">
 <meta property="og:url" content="https://chingyawhao.github.io/">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f6f7">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0b0c">
+<meta name="theme-color" content="#0b0b0c">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -25,6 +24,7 @@
     t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   }
   document.documentElement.dataset.theme = t;
+  document.querySelector('meta[name="theme-color"]').content = t === 'dark' ? '#0b0b0c' : '#f6f6f7';
 })();
 </script>
 <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet">
@@ -95,7 +95,7 @@
             <span class="chat__who"><b>Sarah</b><span>AI property advisor</span></span>
             <span class="chat__online">Online</span>
           </div>
-          <ul class="thread" id="thread" role="log" aria-live="polite" aria-label="Conversation with Sarah"></ul>
+          <div class="thread" id="thread" role="log" aria-live="off" aria-label="Conversation with Sarah"></div>
           <div class="chat__bar">
             <input class="chat__input" type="text" placeholder="Tell Sarah what you're looking for…" aria-label="Tell Sarah what you're looking for" readonly aria-disabled="true" tabindex="-1">
             <button class="chat__ask" type="button" aria-disabled="true" tabindex="-1">Ask</button>

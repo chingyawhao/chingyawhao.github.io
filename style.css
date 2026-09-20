@@ -206,10 +206,11 @@ h2 {
 
 .hero {
   position: relative;
+  min-height: 100vh;
   min-height: 100svh;
   display: grid;
   align-items: end;
-  padding: 5rem clamp(1rem, 3vw, 2rem) clamp(1.5rem, 4vw, 3rem);
+  padding: 5rem clamp(1rem, 3vw, 2rem) clamp(2.75rem, 4vw, 3rem); /* bottom clears the map attribution control */
   background: var(--hero-fallback), var(--bg);
   overflow: hidden;
 }
@@ -220,6 +221,7 @@ h2 {
   transition: opacity 0.8s var(--ease);
 }
 .hero.is-live .hero__map { opacity: 1; }
+.hero:not(.is-live) .hero__map { visibility: hidden; } /* keeps the pins out of the tab order until there is a map */
 .hero.is-exploring .hero__map { pointer-events: auto; }
 
 .hero__panel {
@@ -281,6 +283,8 @@ h2 {
   transition: box-shadow 0.25s var(--ease);
 }
 .pin:hover, .pin:focus-visible { box-shadow: 0 0 0 8px rgb(var(--accent-rgb) / 0.3); }
+.maplibregl-map { font: inherit; } /* MapLibre sets 12px Helvetica on the container */
+.maplibregl-canvas:focus-visible { outline-offset: -3px; } /* the canvas fills a clipped box */
 .maplibregl-popup { pointer-events: auto; max-width: 240px; }
 .maplibregl-popup-tip { display: none; }
 .maplibregl-popup-content {
@@ -310,7 +314,9 @@ h2 {
   font-size: 0.6875rem;
   pointer-events: auto;
 }
+.maplibregl-ctrl-attrib.maplibregl-compact,
 .maplibregl-ctrl-attrib a { color: var(--muted); }
+.maplibregl-ctrl-attrib a:hover { color: var(--text); }
 .maplibregl-ctrl-bottom-right { z-index: 3; }
 
 /* ---------- sections ---------- */
@@ -323,6 +329,7 @@ main {
 .sec + .sec { border-top: 1px solid var(--line); }
 .sec--split { padding-block: 0; }
 .half { padding-block: clamp(3rem, 6vw, 5rem); }
+.half + .half { border-top: 1px solid var(--line); }
 
 .grid {
   display: grid;
@@ -394,6 +401,7 @@ main {
 
 .chat {
   width: min(380px, 100%);
+  height: min(560px, 80vh);
   height: min(560px, 80svh);
   display: flex; flex-direction: column;
   background: var(--panel);
