@@ -105,7 +105,7 @@ first person, plain, concrete numbers, no adjectives about himself.
   DeepWood, a wood-species identification project with FRIM.
 
 **Working with**
-> TypeScript · React, React Native · Node.js · PostgreSQL, PostGIS, pgvector ·
+> TypeScript · React, React Native, Flutter · Node.js · PostgreSQL, PostGIS, pgvector ·
 > Redis, BullMQ · MapLibre, Protomaps, Nominatim, OpenStreetMap · LangGraph,
 > MCP · DigitalOcean, AWS
 
