@@ -161,3 +161,102 @@ script — there are no client-side routes any more.
 Blog, analytics, contact form, multiple pages, resume download, deleting the
 stale Dependabot branches on the remote (worth doing separately — they are
 all against the removed `package.json`).
+
+---
+
+# Revision 2 — "Show, don't tell" (2026-09-20, supersedes Look, Files, Page structure, Typography, Verification above)
+
+The owner is a UI/UX person and v1 read as generic minimalism. v2 keeps the copy
+and the zero-build rule but makes the page a working demo of what he builds.
+
+## Still true
+
+Copy section above is unchanged and remains the source of truth for text. No
+framework, no bundler, no `package.json`. GitHub Pages from `master` root.
+No CV, no phone. Editorial serif for the name only.
+
+## Now different
+
+- **JS allowed**: one vanilla `app.js`. One external dependency: MapLibre GL JS
+  5.x pinned from jsDelivr (`https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/`).
+- **Dark-first**. Light mode still supported via `prefers-color-scheme`, plus a
+  visible toggle that persists to `localStorage`.
+- **Motion is welcome**: scroll-driven reveals, chat typing, map drift, hover
+  states. All gated by `prefers-reduced-motion`.
+
+## Files
+
+```
+index.html  style.css  app.js  404.html
+favicon.svg favicon.ico apple-touch-icon.png
+fonts/instrument-serif.woff2
+```
+
+## Page structure
+
+1. **Hero — live map.** Full-viewport MapLibre map of Kuala Lumpur, centre
+   `[101.6869, 3.139]`, zoom ~11.5, slow drift (`easeTo` loop or bearing
+   rotation), non-interactive by default (scroll passes through) with a small
+   "explore" control that enables interaction. Style URL is a single constant:
+   dark `https://tiles.openfreemap.org/styles/dark`, light
+   `https://tiles.openfreemap.org/styles/positron`, swapped on theme change.
+   Overlay: `h1` name, role line, hero positioning paragraph, contact links,
+   caption "This map runs on the stack I built for MyRumahBaru — MapLibre,
+   Protomaps." Five sample-listing pins with popups (data below). If MapLibre
+   fails to load or WebGL is unavailable, the hero shows a static gradient and
+   nothing else changes.
+2. **Sarah — chat demo.** A phone frame containing a WhatsApp-style thread that
+   auto-plays when scrolled into view (IntersectionObserver): typing indicator
+   → message, ~900 ms cadence, then a "Replay" button. Beside it the Sarah copy
+   from the spec. Script is fixed (below).
+3. **Track record — numbers.** Didian as three stat tiles: `RM266M` GDV ·
+   `~300` agents · `5½ yrs` first engineer → Head of Engineering. Under them
+   one line each for MoneyLion and UTAR MIMOS Lab (copy from spec).
+4. **Now — the other three items** (Lead funnel, Geospatial layer, Search) as
+   a compact list beside or below the map/chat, copy from spec.
+5. **Recognition + Working with** — compact.
+6. **Footer** — links, ©.
+
+## Fixed content for the demos
+
+Sarah thread (lead = right/green bubbles, Sarah = left):
+
+```
+lead   Hi, I saw the ad for the new condo in Cheras. Is it still open for booking?
+sarah  Hi! Yes it is 😊 I'm Sarah from MyRumahBaru. A few quick questions so I can match you with the right unit — what's your budget?
+lead   Around 500k
+sarah  Got it, up to RM500K. How many bedrooms are you looking for?
+lead   3, for family
+sarah  Noted — 3 bedrooms. Is this your first home purchase?
+lead   Yes
+sarah  Great, you may qualify for first-time buyer incentives. Would you like to visit the show unit this weekend?
+lead   Saturday can
+sarah  Saturday it is. 11 AM or 3 PM?
+lead   3pm
+sarah  Booked ✅ Saturday, 3:00 PM at the Cheras sales gallery with Amirah. She'll confirm with you tomorrow morning. See you there!
+```
+
+Map pins (`[lng, lat]`, label, popup):
+
+```
+[101.744, 3.089]  Cheras       3-bed condo · from RM480K
+[101.760, 3.150]  Ampang       2-bed serviced apt · from RM390K
+[101.651, 3.166]  Mont Kiara   3-bed condo · from RM1.2M
+[101.671, 3.128]  Bangsar      2-bed condo · from RM750K
+[101.717, 3.198]  Setapak      3-bed apartment · from RM320K
+```
+Popups carry a muted "sample listing" line.
+
+## Build method
+
+Three independent variants built in parallel from this spec, each a complete
+`index.html` + `style.css` + `app.js`, then screenshotted for the owner to
+choose from. The chosen one is promoted to the repo root.
+
+## Verification
+
+- Each variant loads with no console errors; map renders tiles; chat plays;
+  toggle switches map style and page theme; reduced-motion disables autoplay
+  drift and reveals.
+- 375px and 1280px, light and dark, no horizontal scroll.
+- With `maplibre-gl.js` blocked, the page still renders.
