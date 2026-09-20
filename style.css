@@ -110,6 +110,7 @@ b { font-weight: 600; }
 .links li { margin: 0; }
 .links li:not(:last-child)::after {
   content: "·";
+  content: "·" / "";
   color: var(--muted);
   margin-left: 0.6em;
 }
