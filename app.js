@@ -43,15 +43,18 @@ let map = null;
 let showPin = () => {}; // set by initMap: opens PINS[i]'s popup
 const themeBtn = $('theme');
 
-function applyTheme(theme) {
+function applyTheme(theme, persist = true) {
   document.documentElement.dataset.theme = theme;
   if (themeBtn) themeBtn.setAttribute('aria-pressed', String(theme === 'dark'));
-  try { localStorage.setItem('theme', theme); } catch (e) { /* private mode: ignore */ }
+  try { persist ? localStorage.setItem('theme', theme) : localStorage.removeItem('theme'); } catch (e) { /* private mode: ignore */ }
   document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
     m.content = theme === 'dark' ? '#0b0b0c' : '#f6f6f7';
   });
   if (map) map.setStyle(theme === 'dark' ? TILES_DARK : TILES_LIGHT);
 }
+
+/* The OS setting always wins: a change clears any manual override and is followed live. */
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => applyTheme(e.matches ? 'dark' : 'light', false));
 
 if (themeBtn) {
   themeBtn.setAttribute('aria-pressed', String(document.documentElement.dataset.theme === 'dark'));
