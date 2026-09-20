@@ -108,10 +108,10 @@ b { font-weight: 600; }
   gap: 0 0.6em;
 }
 .links li { margin: 0; }
-.links li + li::before {
+.links li:not(:last-child)::after {
   content: "·";
   color: var(--muted);
-  margin-right: 0.6em;
+  margin-left: 0.6em;
 }
 
 a {
