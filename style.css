@@ -354,7 +354,7 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   gap: 1rem;
-  margin-block: 0.5rem 2.5rem;
+  margin-block: 2rem 2.5rem;
 }
 .stat {
   display: grid; gap: 0.375rem;

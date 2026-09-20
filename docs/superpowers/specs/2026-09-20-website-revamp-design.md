@@ -358,3 +358,40 @@ Search) stay as subject-less fragments after their bold lead-in, so they claim
 neither "I" nor "we". Under-the-hood / "Also at MyRumahBaru" style section
 labels are fine. Any remaining "I built … for MyRumahBaru" phrasing anywhere
 on the page becomes "we built" or is made subject-less.
+
+---
+
+# Revision 5 — The story replaces "Before" (2026-09-20, copy only)
+
+The Track record section is now the owner's growth narrative — the story he
+tells when introducing himself professionally — instead of three resume
+paragraphs. Stat tiles stay, under the Didian beat.
+
+**Eyebrow:** The story · 2015–
+**Heading:** Each move was the next thing to learn
+
+> I make career decisions on one question: where will I grow fastest?
+>
+> **University** — Hackathons and open source were how I tested whether my
+> skills held up outside coursework. A research assistantship at UTAR's MIMOS
+> Lab, building the front end for DeepWood with FRIM, was the first time my
+> code had real users.
+>
+> **MoneyLion** (2017–2018) — I joined to learn how an engineering team
+> actually works: agile process, code review, shipping inside a large
+> production codebase.
+>
+> **Didian** (2018–2024) — The next step was building a product from the
+> ground up. As the first engineering hire I chose the stack, owned the
+> product, ran the analytics and iterated on what the numbers said. By the
+> end: five and a half years, a team of six, RM266M GDV, around 300 agents.
+>
+> [stat tiles: RM266M · ~300 · 5½ yrs]
+>
+> **MyRumahBaru** (2024–) — After owning someone else's product, the only
+> thing left to learn was building a company from nothing. Everything before
+> this was practice for it.
+
+The last beat deliberately lands on MyRumahBaru rather than implying a next
+step, so "I prioritise growth" does not read as "I'll leave when I stop
+learning."
