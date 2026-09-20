@@ -260,3 +260,68 @@ choose from. The chosen one is promoted to the repo root.
   drift and reveals.
 - 375px and 1280px, light and dark, no horizontal scroll.
 - With `maplibre-gl.js` blocked, the page still renders.
+
+---
+
+# Revision 3 — Sarah is a web chatbot (2026-09-20, supersedes the Sarah parts of Revision 2)
+
+Owner correction: Sarah is the AI property advisor on myrumahbaru.com — a web
+chat, not WhatsApp. Verified against the live site: greeting "Hi! I'm Sarah 👋
+Tell me what you're looking for in a home", quick chips ("I want to buy…",
+"I want to rent…", "Help me find a house"), a text box and an "Ask" button.
+Positioning on the site: "Not a search engine. A conversation" — remembers the
+whole conversation, asks before recommending, explains the neighbourhood, gives
+opinionated recommendations, finds matches across new launches / subsale /
+rental, shows them on a map, connects to verified agents for viewings.
+
+## Copy (replaces the Sarah bullet in the Copy section)
+
+- **Sarah** — the AI property advisor on myrumahbaru.com. Buyers say what they
+  want in plain language; she asks before recommending, remembers the whole
+  conversation, and turns matches into viewings with verified agents.
+  LangGraph, BullMQ, Redis and Postgres/PostGIS.
+
+The hero positioning, meta description and everything else are unchanged. All
+mentions of WhatsApp, click-to-WhatsApp ads and the WhatsApp Cloud API are
+removed from the page.
+
+## Demo (replaces the phone frame)
+
+A web chat widget, styled per variant but with this anatomy: header (avatar
+circle with "S", "Sarah", muted "AI property advisor", green online dot);
+scrollable message list; user turns appear as a **quick-reply chip being
+chosen** (the chip highlights, then becomes a right-aligned user bubble);
+Sarah turns show a typing indicator first; two **listing cards** appear inline
+in one Sarah turn (title, area, beds/baths/sqft, price, a small "View on map"
+link that scrolls to the hero and opens that pin's popup); an input bar at the
+bottom with placeholder "Tell Sarah what you're looking for…" and an **Ask**
+button (decorative — the demo is scripted; a muted line under the widget says
+"Scripted demo. The real Sarah runs on myrumahbaru.com."). Auto-plays once when
+40% visible; Replay button after the last turn; reduced-motion renders the full
+thread instantly.
+
+## Fixed script
+
+```
+sarah  Hi! I'm Sarah 👋 Tell me what you're looking for in a home
+user   [chip] Looking to buy a 3-bedroom condo near an LRT, budget around 500k
+sarah  Got it — 3 bedrooms, near LRT, up to RM500K. Is this for your own stay or an investment?
+user   [chip] Own stay, small family
+sarah  Then I'd weigh schools and a proper car park over rental yield. Which side of KL — Cheras/Ampang, or Setapak/Wangsa Maju?
+user   [chip] Cheras side
+sarah  Two that fit well:
+       [card] Curvo Residence · Cheras · 3 bed · 2 bath · 952–1,345 sqft · from RM520K · New launch
+       [card] Residensi Bukit Cheras · Cheras · 3 bed · 2 bath · 1,050 sqft · RM468K · Subsale
+       Curvo is a touch over your number, but the developer is covering legal fees right now, so upfront it lands under. Want me to set up viewings with Amirah? She's the verified agent for both.
+user   [chip] Yes, Saturday afternoon
+sarah  Done — Saturday, 3:00 PM. Amirah will confirm with you here. I've pinned both on your map 📍
+```
+
+Both listing cards' "View on map" target the Cheras pin `[101.744, 3.089]`.
+Cards are sample data and say so in a muted line.
+
+## Also in this revision
+
+- Variant C: `[hidden] { display: none !important; }` — the "Done exploring"
+  button was visible at load because `.btn { display: flex }` beat the `hidden`
+  attribute.
