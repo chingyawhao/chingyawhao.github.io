@@ -30,7 +30,7 @@ style.css           all styling
 favicon.svg         monogram, inline SVG, respects dark mode
 favicon.ico         fallback for Safari / old browsers, generated from the SVG
 apple-touch-icon.png 180×180, generated from the SVG
-fonts/<display>.woff2  one self-hosted OFL serif (see Typography)
+fonts/instrument-serif.woff2  one self-hosted OFL serif (see Typography)
 .gitignore          `.DS_Store`
 docs/superpowers/   this spec and the plan
 ```
@@ -118,8 +118,8 @@ Side project: [Ai Chan Chatbot](https://ai-chan-chatbot.github.io/)
 
 ## Typography & colour
 
-- Display: one OFL serif, self-hosted as a single variable `woff2` in `fonts/`
-  (candidate: Newsreader or Instrument Serif; picked at build time by eye).
+- Display: Instrument Serif (OFL), regular weight only, self-hosted as one
+  `woff2` (~30 KB) in `fonts/`, fetched once from the fontsource package.
   Used for the `h1` and nothing else large. `font-display: swap`.
 - Body: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`.
 - Fluid sizes via `clamp()`. Body 17–18px, line-height 1.6.
