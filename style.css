@@ -237,17 +237,25 @@ h2 {
   box-shadow: var(--shadow);
   transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
 }
-.hero.is-exploring .hero__panel { opacity: 0; transform: translateY(8px); }
+.hero.is-exploring .hero__panel {
+  opacity: 0;
+  transform: translateY(8px);
+  visibility: hidden; /* out of the tab order too; no inert needed */
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), visibility 0s 0.3s;
+}
 
 /* Phones: the map is a band, not a backdrop. The hero itself goes transparent so main's dot grid
    runs right up to the map's bottom edge, and the card floats on the dots, overlapping the band. */
 @media (max-width: 44rem) {
   .hero { display: block; min-height: 0; padding: 0 1rem 2.5rem; overflow: visible; background: none; }
-  .hero__map { position: relative; inset: auto; height: 56svh; min-height: 22rem; margin: 0 -1rem; background: var(--hero-fallback), var(--bg); }
+  .hero { --band: max(56svh, 22rem); }
+  .hero__map { position: relative; inset: auto; height: var(--band); margin: 0 -1rem; background: var(--hero-fallback), var(--bg); }
   .hero__panel { margin-top: -2.5rem; max-width: none; }
   .hero__lede { font-size: 0.9375rem; }
-  .hero__explore { top: 4.25rem; }
-  .hero.is-exploring .hero__panel { opacity: 1; transform: none; } /* nothing to uncover on phones */
+  .hero.is-exploring .hero__panel { opacity: 1; transform: none; visibility: visible; } /* nothing to uncover on phones */
+  /* Explore sits on the attribution row at the band's bottom-left, out of the popup column. The hero
+     is taller than the band (card below), so anchor from the top using the band height; the button is 2.5rem tall. */
+  .hero .hero__explore { top: calc(var(--band) - 2.75rem - 10px - 2.5rem); bottom: auto; left: 1rem; right: auto; }
   .maplibregl-ctrl-bottom-right { bottom: 2.75rem; } /* clear the card's overlap */
 }
 .hero__panel h1 { margin-bottom: 1rem; }

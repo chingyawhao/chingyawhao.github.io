@@ -84,14 +84,19 @@ function initMap() {
   const mapEl = $('map');
   if (typeof maplibregl === 'undefined' || !hasWebGL() || !hero || !explore || !panel || !mapEl) return;
 
-  /* Padding keeps the point of interest in the part of the map not covered by UI:
-     bottom = how much of the map the panel actually overlaps (all of it on desktop, a sliver on phones);
-     top = clear of the Explore button, plus room for a popup (~140px) to open upward from a pin. */
+  /* Padding keeps the point of interest in the part of the map not covered by UI. MapLibre puts the
+     target at the padded MIDPOINT, (top + H - bottom) / 2, so:
+     bottom = what the panel overlaps, plus the attribution/Explore row on phones;
+     top    = enough that a popup (~160px, opening upward from the midpoint) clears the fixed bar. */
+  const POPUP_H = 160;
   const pad = () => {
     const m = mapEl.getBoundingClientRect();
+    const H = mapEl.clientHeight;
     const overlap = m.bottom - panel.getBoundingClientRect().top;
-    const belowExplore = explore.getBoundingClientRect().bottom - m.top + 48;
-    return { top: Math.max(72, belowExplore), left: 24, right: 24, bottom: Math.max(24, Math.min(overlap + 24, mapEl.clientHeight * 0.55)) };
+    const bottom = Math.max(50, Math.min(overlap + 50, H * 0.55));
+    const barClear = (document.querySelector('.bar')?.getBoundingClientRect().bottom || 0) - m.top + 8;
+    const top = Math.max(72, 2 * (barClear + POPUP_H) - H + bottom);
+    return { top, left: 24, right: 24, bottom };
   };
 
   map = new maplibregl.Map({
@@ -153,8 +158,10 @@ function initMap() {
   let touring = !reducedMotion;
   let leg = -1;
   let dwell = 0;
+  let pinned = -1; // chapter a story link parked on; -1 = none
   function tour() {
     if (!touring) return;
+    pinned = -1;
     leg = (leg + 1) % (PINS.length + 1);
     if (leg === PINS.length) {
       arrival++;
@@ -175,19 +182,23 @@ function initMap() {
   /* Story section "on the map" links: jump to that chapter and stay there. */
   showPin = (i) => {
     stopTour();
+    pinned = i;
     goTo(i, reducedMotion ? 0 : 1200, true);
   };
 
   map.on('resize', () => {
-    map.setPadding(pad()); // a jumpTo: ends any in-flight ease (and fires its moveend)
-    if (touring && leg >= 0) { clearTimeout(dwell); leg -= 1; tour(); } // redo the interrupted leg
+    arrival++;             // setPadding is a jumpTo: it stops any in-flight ease and fires its moveend — ignore that arrival
+    map.setPadding(pad());
+    if (hero.classList.contains('is-exploring')) return;
+    if (touring) { if (leg >= 0) { clearTimeout(dwell); leg -= 1; tour(); } } // redo the interrupted leg
+    else if (pinned >= 0 && popups[pinned].isOpen()) goTo(pinned, 0, false);  // re-frame the parked chapter
+    else map.fitBounds([BOUNDS.sw, BOUNDS.ne], { duration: 0 });             // reduced motion / pre-tour overview
   });
 
   function setExploring(on) {
     hero.classList.toggle('is-exploring', on);
     HANDLERS.forEach((h) => map[h][on ? 'enable' : 'disable']());
     map.getCanvas().tabIndex = on ? 0 : -1;
-    panel.inert = on;
     explore.textContent = on ? 'Exit map' : 'Explore map';
     if (on) {
       stopTour();
@@ -213,6 +224,15 @@ function initMap() {
     map.fitBounds([BOUNDS.sw, BOUNDS.ne], { duration: 0 });
     tour();
   });
+  /* On phones the compact attribution auto-opens once its text arrives (with the tile source, after
+     style.load) and would sit under the Explore button on the same row. Collapse it once everything
+     has loaded; the ⓘ still opens it, and MapLibre only auto-opens it once. */
+  if (matchMedia('(max-width: 44rem)').matches) {
+    map.once('load', () => {
+      const attrib = mapEl.querySelector('.maplibregl-ctrl-attrib');
+      if (attrib) { attrib.classList.remove('maplibregl-compact-show'); attrib.removeAttribute('open'); }
+    });
+  }
   map.on('error', (e) => {
     /* Tile/style errors are non-fatal; only log so nothing else breaks. */
     console.warn('map', e && e.error);

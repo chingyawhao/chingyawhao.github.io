@@ -451,8 +451,11 @@ border became an outer ring so the arrow reads as part of the bubble.
 - **Phones**: the hero is a 56svh map band. The card stays a card, overlapping
   the band's bottom edge by 2.5rem; the hero itself is transparent so `main`'s
   dot grid runs right up to the map (owner: "the dotted background should
-  continue to where the map ends"). Attribution sits above the card. Popups are
-  kept clear of the Explore button via top padding.
+  continue to where the map ends"). On phones the Explore button moves to the
+  band's bottom-left and the attribution starts collapsed (ⓘ) at bottom-right,
+  both on the row the bottom padding reserves; MapLibre frames the target at
+  the padded midpoint, so top padding is derived from bar height + popup
+  height (~160px) so popups never slide under the bar.
 - **Camera rules** (from review): padding is set on the map, then the overview
   is fitted once against it; the constructor's `fitBoundsOptions` is not used
   (it would fit against zero padding and the later `setPadding` would shift
