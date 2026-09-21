@@ -395,3 +395,53 @@ paragraphs. Stat tiles stay, under the Didian beat.
 The last beat deliberately lands on MyRumahBaru rather than implying a next
 step, so "I prioritise growth" does not read as "I'll leave when I stop
 learning."
+
+---
+
+# Revision 6 — The map shows where he worked (2026-09-21)
+
+Owner question: "what's the purpose of the map as the hero?" Sample listings
+were decoration. The map is now the story's other half: one pin per chapter,
+and the hero tours them in order.
+
+## Pins (`[lng, lat]`, geocoded from OSM)
+
+```
+0  UTAR MIMOS Lab   Sungai Long                 2016–2017  [101.79428, 3.03981]  zoom 13.5
+1  MoneyLion        Q Sentral                   2017–2018  [101.68762, 3.13666]  zoom 13.5
+2  Didian           KL Eco City · Strata Office 2018–2024  [101.67461, 3.12028]  zoom 15
+3  MyRumahBaru      KL Eco City · Mercu 2       2024–      [101.67390, 3.11868]  zoom 16.5
+```
+
+Popup: org (bold), one-line beat, muted "place · years". Strata Office and
+Mercu 2 are ~200 m apart; the Didian leg's zoom shows both, the MRB leg's
+popup says so ("Two hundred metres from the last job").
+
+## Tour
+
+Initial view fits all four pins above the hero panel. Then, timer-driven:
+ease to pin 0 → open popup → dwell → pin 1 → … → pin 3 → pull back to the
+overview → repeat. 6 s travel, 7 s dwell. Explore mode and the story links
+stop it; leaving explore restarts it. Reduced motion: overview only, popups
+on click.
+
+Map padding is set once on the map (`setPadding`, refreshed on resize) so
+the hero panel never covers the point of interest. It is **not** passed per
+camera call — MapLibre persists easeTo/fitBounds padding, and passing it
+again stacks it (the "cannot fit within canvas" warning).
+
+## Story links
+
+Each beat in the story section carries an "on the map" link (`data-pin`)
+that scrolls to the hero and jumps to that chapter. Links are removed when
+the map failed to initialise.
+
+## Removed
+
+Sample-listing pins, the chat cards' "View on map" links, and the map-stack
+caption. Sarah's last line is now "Done — Saturday, 3:00 PM at the Cheras
+gallery. Amirah will confirm with you here. See you there! 🏡". Hero caption:
+"Ten years, four addresses. Each pin is a chapter of the story below."
+
+Popups have their arrow back (variant A had hidden the tip); the bubble's
+border became an outer ring so the arrow reads as part of the bubble.

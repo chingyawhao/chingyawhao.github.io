@@ -3,16 +3,18 @@
 
 const TILES_DARK = 'https://tiles.openfreemap.org/styles/dark';
 const TILES_LIGHT = 'https://tiles.openfreemap.org/styles/positron';
-const MAP_CENTER = [101.6869, 3.139];
-const MAP_ZOOM = 11.5;
-
+/* The four chapters of the story, in order. The hero map tours them; the story section links to them. */
 const PINS = [
-  { lngLat: [101.744, 3.089], label: 'Cheras', text: '3-bed condo · from RM480K' },
-  { lngLat: [101.760, 3.150], label: 'Ampang', text: '2-bed serviced apt · from RM390K' },
-  { lngLat: [101.651, 3.166], label: 'Mont Kiara', text: '3-bed condo · from RM1.2M' },
-  { lngLat: [101.671, 3.128], label: 'Bangsar', text: '2-bed condo · from RM750K' },
-  { lngLat: [101.717, 3.198], label: 'Setapak', text: '3-bed apartment · from RM320K' },
+  { lngLat: [101.79428, 3.03981], org: 'UTAR MIMOS Lab', place: 'Sungai Long', when: '2016–2017', text: 'Research assistant. First code with real users.', zoom: 13.5 },
+  { lngLat: [101.68762, 3.13666], org: 'MoneyLion', place: 'Q Sentral', when: '2017–2018', text: 'How an engineering team actually works.', zoom: 13.5 },
+  { lngLat: [101.67461, 3.12028], org: 'Didian', place: 'KL Eco City · Strata Office', when: '2018–2024', text: 'A product from the ground up.', zoom: 15 },
+  { lngLat: [101.67390, 3.11868], org: 'MyRumahBaru', place: 'KL Eco City · Mercu 2', when: '2024–', text: 'A company from nothing. Two hundred metres from the last job.', zoom: 16.5 },
 ];
+const BOUNDS = PINS.reduce((b, p) => b.extend(p.lngLat), new (function () {
+  /* tiny LngLatBounds stand-in so BOUNDS can be built before maplibregl loads */
+  this.sw = [Infinity, Infinity]; this.ne = [-Infinity, -Infinity];
+  this.extend = ([lng, lat]) => { this.sw = [Math.min(this.sw[0], lng), Math.min(this.sw[1], lat)]; this.ne = [Math.max(this.ne[0], lng), Math.max(this.ne[1], lat)]; return this; };
+})());
 
 /* Fixed script from the spec, verbatim. A Sarah turn is a list of parts: strings, or the CARDS array. */
 const CARDS = [
@@ -28,9 +30,8 @@ const SCRIPT = [
   ['user', 'Cheras side'],
   ['sarah', 'Two that fit well:', CARDS, "Curvo is a touch over your number, but the developer is covering legal fees right now, so upfront it lands under. Want me to set up viewings with Amirah? She's the verified agent for both."],
   ['user', 'Yes, Saturday afternoon'],
-  ['sarah', "Done — Saturday, 3:00 PM. Amirah will confirm with you here. I've pinned both on your map 📍"],
+  ['sarah', 'Done — Saturday, 3:00 PM at the Cheras gallery. Amirah will confirm with you here. See you there! 🏡'],
 ];
-const CHERAS_PIN = 0; // index into PINS; both listing cards target it
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (id) => document.getElementById(id);
@@ -66,7 +67,8 @@ if (themeBtn) {
 /* ---------- map hero ---------- */
 
 const HANDLERS = ['scrollZoom', 'boxZoom', 'dragRotate', 'dragPan', 'keyboard', 'doubleClickZoom', 'touchZoomRotate'];
-const DRIFT_STOPS = [[101.70, 3.15], [101.67, 3.12], [101.71, 3.12], [101.66, 3.16]];
+const LEG_MS = 6000;   // travel time between chapters
+const DWELL_MS = 7000; // time spent on each chapter with its popup open
 
 function hasWebGL() {
   try {
@@ -81,26 +83,36 @@ function initMap() {
   const panel = $('hero-panel');
   if (typeof maplibregl === 'undefined' || !hasWebGL() || !hero || !explore || !panel || !$('map')) return;
 
+  /* Keep the map's centre of interest in the part not covered by the hero panel. */
+  const mapEl = $('map');
+  const pad = () => ({
+    top: 72, left: 24, right: 24,
+    bottom: Math.min(panel.offsetHeight + 24, mapEl.clientHeight * 0.55),
+  });
   map = new maplibregl.Map({
     container: 'map',
     style: document.documentElement.dataset.theme === 'dark' ? TILES_DARK : TILES_LIGHT,
-    center: MAP_CENTER,
-    zoom: MAP_ZOOM,
+    bounds: [BOUNDS.sw, BOUNDS.ne],
+    fitBoundsOptions: { padding: pad() },
     attributionControl: { compact: true },
   });
   HANDLERS.forEach((h) => map[h].disable());
   map.getCanvas().tabIndex = -1;
+  /* Padding lives on the map, not on each camera call: MapLibre persists easeTo/fitBounds padding,
+     so passing it per call would stack it on itself. */
+  map.setPadding(pad());
+  map.on('resize', () => map.setPadding(pad()));
 
   /* Pins are real <button>s so Enter/Space work natively. Popups are toggled by hand rather than
      via Marker.setPopup, which would double-fire on keyboard (its keypress + the synthetic click). */
   const popups = [];
-  PINS.forEach(({ lngLat, label, text }) => {
+  PINS.forEach(({ lngLat, org, place, when, text }) => {
     const el = document.createElement('button');
     el.className = 'pin';
     el.type = 'button';
     const popup = new maplibregl.Popup({ offset: 12, closeOnClick: false })
       .setLngLat(lngLat)
-      .setHTML(`<b>${label}</b>${text}<small>Sample listing</small>`);
+      .setHTML(`<b>${org}</b>${text}<small>${place} · ${when}</small>`);
     popups.push(popup);
     el.addEventListener('click', () => {
       const open = popup.isOpen();
@@ -108,31 +120,41 @@ function initMap() {
       if (!open) popup.addTo(map);
     });
     new maplibregl.Marker({ element: el }).setLngLat(lngLat).addTo(map);
-    el.setAttribute('aria-label', `${label}: ${text}`); // after addTo, which may set its own
+    el.setAttribute('aria-label', `${org}, ${place}, ${when}`); // after addTo, which may set its own
   });
 
-  /* Slow drift: ease between a few stops around the centre; stops while the user explores. */
-  let drifting = !reducedMotion;
-  let stop = 0;
-  function drift() {
-    if (!drifting) return;
-    stop = (stop + 1) % DRIFT_STOPS.length;
-    map.easeTo({ center: DRIFT_STOPS[stop], duration: 28000, easing: (t) => t, essential: true }); // essential: MapLibre would otherwise zero the duration under reduced motion and moveend would recurse synchronously
+  /* Guided tour: visit each chapter in order, open its popup, dwell, then pull back to the overview.
+     Timer-driven (not moveend-chained) so stopping it is one clearTimeout. */
+  let touring = !reducedMotion;
+  let leg = -1;
+  let dwell = 0;
+  function openPopupOnArrival(i) {
+    const at = leg;
+    map.once('moveend', () => { if (touring && leg === at) { popups.forEach((p) => p.remove()); popups[i].addTo(map); } });
   }
-  map.on('moveend', drift);
-
-  /* Chat "View on map": open the pin's popup and bring it into the part of the map
-     not covered by the hero panel; drift pauses so it stays put. */
-  showPin = (i) => {
+  function tour() {
+    if (!touring) return;
+    leg = (leg + 1) % (PINS.length + 1);
     popups.forEach((p) => p.remove());
-    popups[i].addTo(map);
-    drifting = false;
-    map.easeTo({
-      center: PINS[i].lngLat,
-      padding: { bottom: Math.min(panel.offsetHeight, map.getContainer().clientHeight * 0.5) },
-      duration: reducedMotion ? 0 : 1200,
-      essential: true,
-    });
+    if (leg === PINS.length) {
+      map.fitBounds([BOUNDS.sw, BOUNDS.ne], { duration: LEG_MS, essential: true });
+    } else {
+      map.easeTo({ center: PINS[leg].lngLat, zoom: PINS[leg].zoom, duration: LEG_MS, essential: true });
+      openPopupOnArrival(leg);
+    }
+    dwell = setTimeout(tour, LEG_MS + DWELL_MS);
+  }
+  function stopTour() {
+    touring = false;
+    clearTimeout(dwell);
+  }
+
+  /* Story section "on the map" links: jump to that chapter and stay there. */
+  showPin = (i) => {
+    stopTour();
+    popups.forEach((p) => p.remove());
+    map.easeTo({ center: PINS[i].lngLat, zoom: PINS[i].zoom, duration: reducedMotion ? 0 : 1200, essential: true });
+    map.once('moveend', () => { popups.forEach((p) => p.remove()); popups[i].addTo(map); });
   };
 
   function setExploring(on) {
@@ -142,13 +164,13 @@ function initMap() {
     panel.inert = on;
     explore.textContent = on ? 'Exit map' : 'Explore map';
     if (on) {
-      drifting = false;
+      stopTour();
       map.stop();
       map.getCanvas().focus();
     } else {
-      drifting = !reducedMotion;
+      touring = !reducedMotion;
       explore.focus();
-      drift();
+      tour();
     }
   }
   explore.addEventListener('click', () => setExploring(!hero.classList.contains('is-exploring')));
@@ -159,7 +181,7 @@ function initMap() {
   map.once('load', () => {
     hero.classList.add('is-live');
     explore.hidden = false;
-    drift();
+    tour();
   });
   map.on('error', (e) => {
     /* Tile/style errors are non-fatal; only log so nothing else breaks. */
@@ -168,6 +190,11 @@ function initMap() {
 }
 
 try { initMap(); } catch (e) { console.warn('map unavailable', e); }
+
+document.querySelectorAll('[data-pin]').forEach((a) => {
+  if (!map) { a.remove(); return; } // no map, no link
+  a.addEventListener('click', () => showPin(+a.dataset.pin)); // the anchor itself scrolls to #top
+});
 
 /* ---------- Sarah chat ---------- */
 
@@ -178,13 +205,7 @@ let run = 0; // increments on each play so a stale timer chain exits early
 function card({ title, area, spec, price, tag }) {
   const el = document.createElement('div');
   el.className = 'listing';
-  const a = document.createElement('a');
-  a.href = '#top';
-  a.className = 'listing__map';
-  a.textContent = 'View on map';
-  a.addEventListener('click', () => showPin(CHERAS_PIN)); // the anchor itself does the scroll
   el.innerHTML = `<b>${title}</b><span>${area} · ${spec}</span><span class="listing__price">${price}<em>${tag}</em></span><small>Sample listing</small>`;
-  if (map) el.append(a);
   return el;
 }
 
