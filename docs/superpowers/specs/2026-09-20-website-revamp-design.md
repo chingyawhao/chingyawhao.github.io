@@ -448,10 +448,11 @@ border became an outer ring so the arrow reads as part of the bubble.
 
 ## Revision 6 addenda (2026-09-21)
 
-- **Phones**: the hero is a 58svh map band; the panel is not a card but a
-  sheet — page background, top corners rounded, rising 1.25rem over the map's
-  bottom edge, continuous with the sections below. Attribution sits above the
-  sheet. Popups are kept clear of the Explore button via top padding.
+- **Phones**: the hero is a 56svh map band. The card stays a card, overlapping
+  the band's bottom edge by 2.5rem; the hero itself is transparent so `main`'s
+  dot grid runs right up to the map (owner: "the dotted background should
+  continue to where the map ends"). Attribution sits above the card. Popups are
+  kept clear of the Explore button via top padding.
 - **Camera rules** (from review): padding is set on the map, then the overview
   is fitted once against it; the constructor's `fitBoundsOptions` is not used
   (it would fit against zero padding and the later `setPadding` would shift
