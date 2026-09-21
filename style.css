@@ -239,16 +239,26 @@ h2 {
 }
 .hero.is-exploring .hero__panel { opacity: 0; transform: translateY(8px); }
 
-/* Phones: the map is a band, not a backdrop. The card sits below it, overlapping the bottom
-   edge just enough to read as one composition, so the map keeps most of the screen to itself. */
+/* Phones: the map is a band, not a backdrop, and the card is not a card — it is the page background
+   rising over the map's bottom edge as a sheet, one continuous surface into the sections below. */
 @media (max-width: 44rem) {
-  .hero { display: block; min-height: 0; padding: 0 1rem 2rem; overflow: visible; }
-  .hero__map { position: relative; inset: auto; height: 56svh; min-height: 22rem; margin: 0 -1rem; }
-  .hero__panel { margin-top: -2.5rem; max-width: none; }
+  .hero { display: block; min-height: 0; padding: 0; overflow: visible; }
+  .hero__map { position: relative; inset: auto; height: 58svh; min-height: 22rem; }
+  .hero__panel {
+    margin-top: -1.25rem;
+    max-width: none;
+    padding: 1.5rem 1.25rem 0.5rem;
+    background: var(--bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 0;
+    border-radius: 20px 20px 0 0;
+    box-shadow: none;
+  }
   .hero__lede { font-size: 0.9375rem; }
   .hero__explore { top: 4.25rem; }
   .hero.is-exploring .hero__panel { opacity: 1; transform: none; } /* nothing to uncover on phones */
-  .maplibregl-ctrl-bottom-right { bottom: 2.5rem; } /* clear the card's overlap */
+  .maplibregl-ctrl-bottom-right { bottom: 1.5rem; } /* clear the sheet's top edge */
 }
 .hero__panel h1 { margin-bottom: 1rem; }
 .hero__lede { max-width: 34rem; margin-bottom: 1.25rem; }

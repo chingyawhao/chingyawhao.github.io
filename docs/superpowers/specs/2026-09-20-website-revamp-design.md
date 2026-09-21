@@ -445,3 +445,22 @@ gallery. Amirah will confirm with you here. See you there! 🏡". Hero caption:
 
 Popups have their arrow back (variant A had hidden the tip); the bubble's
 border became an outer ring so the arrow reads as part of the bubble.
+
+## Revision 6 addenda (2026-09-21)
+
+- **Phones**: the hero is a 58svh map band; the panel is not a card but a
+  sheet — page background, top corners rounded, rising 1.25rem over the map's
+  bottom edge, continuous with the sections below. Attribution sits above the
+  sheet. Popups are kept clear of the Explore button via top padding.
+- **Camera rules** (from review): padding is set on the map, then the overview
+  is fitted once against it; the constructor's `fitBoundsOptions` is not used
+  (it would fit against zero padding and the later `setPadding` would shift
+  the view). One `goTo()` path with an arrival token: `map.stop()` → register
+  `once('moveend')` → `easeTo`, because MapLibre fires the previous ease's
+  `moveend` synchronously inside `stop()` and finishes a 0 ms ease inside
+  `easeTo` itself. Popups use `focusAfterOpen: false` so the tour never steals
+  focus; story links focus the pin instead (announces "org, place, when").
+  Resize replays the interrupted leg. The map reveals on `style.load`, not
+  `load`, so tiles paint progressively.
+- **Popup arrow**: an outlined rotated square clipped to its outward half, so
+  the bubble's ring continues around the arrow in both themes.

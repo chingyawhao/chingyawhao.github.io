@@ -81,42 +81,46 @@ function initMap() {
   const hero = document.querySelector('.hero');
   const explore = $('explore');
   const panel = $('hero-panel');
-  if (typeof maplibregl === 'undefined' || !hasWebGL() || !hero || !explore || !panel || !$('map')) return;
-
-  /* Keep the map's centre of interest in the part not covered by the hero panel. */
   const mapEl = $('map');
-  /* bottom = how much of the map the panel actually covers (all of it on desktop, a sliver on phones) */
+  if (typeof maplibregl === 'undefined' || !hasWebGL() || !hero || !explore || !panel || !mapEl) return;
+
+  /* Padding keeps the point of interest in the part of the map not covered by UI:
+     bottom = how much of the map the panel actually overlaps (all of it on desktop, a sliver on phones);
+     top = clear of the Explore button, plus room for a popup (~140px) to open upward from a pin. */
   const pad = () => {
     const m = mapEl.getBoundingClientRect();
     const overlap = m.bottom - panel.getBoundingClientRect().top;
-    const belowExplore = explore.getBoundingClientRect().bottom - m.top + 48; // popups open upward (~140px tall); keep them off the button
+    const belowExplore = explore.getBoundingClientRect().bottom - m.top + 48;
     return { top: Math.max(72, belowExplore), left: 24, right: 24, bottom: Math.max(24, Math.min(overlap + 24, mapEl.clientHeight * 0.55)) };
   };
+
   map = new maplibregl.Map({
     container: 'map',
     style: document.documentElement.dataset.theme === 'dark' ? TILES_DARK : TILES_LIGHT,
     bounds: [BOUNDS.sw, BOUNDS.ne],
-    fitBoundsOptions: { padding: pad() },
     attributionControl: { compact: true },
   });
   HANDLERS.forEach((h) => map[h].disable());
   map.getCanvas().tabIndex = -1;
-  /* Padding lives on the map, not on each camera call: MapLibre persists easeTo/fitBounds padding,
-     so passing it per call would stack it on itself. */
+  /* Padding lives on the map, never on a camera call: MapLibre persists easeTo/fitBounds padding and
+     fits relative to it, so passing it per call stacks it on itself. Set it, then fit once against it. */
   map.setPadding(pad());
-  map.on('resize', () => map.setPadding(pad()));
+  map.fitBounds([BOUNDS.sw, BOUNDS.ne], { duration: 0 });
 
   /* Pins are real <button>s so Enter/Space work natively. Popups are toggled by hand rather than
-     via Marker.setPopup, which would double-fire on keyboard (its keypress + the synthetic click). */
+     via Marker.setPopup, which would double-fire on keyboard (its keypress + the synthetic click).
+     focusAfterOpen: false — the tour opens popups on its own and must not yank focus every leg. */
   const popups = [];
+  const pins = [];
   PINS.forEach(({ lngLat, org, place, when, text }) => {
     const el = document.createElement('button');
     el.className = 'pin';
     el.type = 'button';
-    const popup = new maplibregl.Popup({ offset: 12, closeOnClick: false })
+    const popup = new maplibregl.Popup({ offset: 12, closeOnClick: false, focusAfterOpen: false })
       .setLngLat(lngLat)
       .setHTML(`<b>${org}</b>${text}<small>${place} · ${when}</small>`);
     popups.push(popup);
+    pins.push(el);
     el.addEventListener('click', () => {
       const open = popup.isOpen();
       popups.forEach((p) => p.remove());
@@ -126,39 +130,58 @@ function initMap() {
     el.setAttribute('aria-label', `${org}, ${place}, ${when}`); // after addTo, which may set its own
   });
 
-  /* Guided tour: visit each chapter in order, open its popup, dwell, then pull back to the overview.
-     Timer-driven (not moveend-chained) so stopping it is one clearTimeout. */
+  /* One "open the popup when the camera settles" path, for the tour and the story links alike.
+     Every camera call runs map.stop() first, which fires the previous ease's moveend synchronously,
+     and a 0ms ease finishes inside easeTo itself — so: stop, then listen, then move. Any later stop
+     or new destination bumps the token, and a stale arrival opens nothing. */
+  let arrival = 0;
+  function goTo(i, duration, focusPin) {
+    const id = ++arrival;
+    map.stop();
+    popups.forEach((p) => p.remove());
+    map.once('moveend', () => {
+      if (arrival !== id) return;
+      popups.forEach((p) => p.remove());
+      popups[i].addTo(map);
+      if (focusPin) pins[i].focus({ preventScroll: true }); // announces "org, place, when, button"
+    });
+    map.easeTo({ center: PINS[i].lngLat, zoom: PINS[i].zoom, duration, essential: true });
+  }
+
+  /* Guided tour: each chapter in order, popup open while dwelling, then back to the overview.
+     Timer-driven so stopping it is one clearTimeout plus a token bump. */
   let touring = !reducedMotion;
   let leg = -1;
   let dwell = 0;
-  function openPopupOnArrival(i) {
-    const at = leg;
-    map.once('moveend', () => { if (touring && leg === at) { popups.forEach((p) => p.remove()); popups[i].addTo(map); } });
-  }
   function tour() {
     if (!touring) return;
     leg = (leg + 1) % (PINS.length + 1);
-    popups.forEach((p) => p.remove());
     if (leg === PINS.length) {
+      arrival++;
+      map.stop();
+      popups.forEach((p) => p.remove());
       map.fitBounds([BOUNDS.sw, BOUNDS.ne], { duration: LEG_MS, essential: true });
     } else {
-      map.easeTo({ center: PINS[leg].lngLat, zoom: PINS[leg].zoom, duration: LEG_MS, essential: true });
-      openPopupOnArrival(leg);
+      goTo(leg, LEG_MS, false);
     }
     dwell = setTimeout(tour, LEG_MS + DWELL_MS);
   }
   function stopTour() {
     touring = false;
+    arrival++;
     clearTimeout(dwell);
   }
 
   /* Story section "on the map" links: jump to that chapter and stay there. */
   showPin = (i) => {
     stopTour();
-    popups.forEach((p) => p.remove());
-    map.easeTo({ center: PINS[i].lngLat, zoom: PINS[i].zoom, duration: reducedMotion ? 0 : 1200, essential: true });
-    map.once('moveend', () => { popups.forEach((p) => p.remove()); popups[i].addTo(map); });
+    goTo(i, reducedMotion ? 0 : 1200, true);
   };
+
+  map.on('resize', () => {
+    map.setPadding(pad()); // a jumpTo: ends any in-flight ease (and fires its moveend)
+    if (touring && leg >= 0) { clearTimeout(dwell); leg -= 1; tour(); } // redo the interrupted leg
+  });
 
   function setExploring(on) {
     hero.classList.toggle('is-exploring', on);
@@ -187,6 +210,7 @@ function initMap() {
     hero.classList.add('is-live');
     explore.hidden = false;
     map.setPadding(pad()); // the button now has a size
+    map.fitBounds([BOUNDS.sw, BOUNDS.ne], { duration: 0 });
     tour();
   });
   map.on('error', (e) => {
@@ -199,7 +223,11 @@ try { initMap(); } catch (e) { console.warn('map unavailable', e); }
 
 document.querySelectorAll('[data-pin]').forEach((a) => {
   if (!map) { a.remove(); return; } // no map, no link
-  a.addEventListener('click', () => showPin(+a.dataset.pin)); // the anchor itself scrolls to #top
+  a.addEventListener('click', (e) => {
+    e.preventDefault(); // a fragment jump would clear the focus goTo() places on the pin
+    document.querySelector('.hero').scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
+    showPin(+a.dataset.pin);
+  });
 });
 
 /* ---------- Sarah chat ---------- */
