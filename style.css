@@ -238,6 +238,18 @@ h2 {
   transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
 }
 .hero.is-exploring .hero__panel { opacity: 0; transform: translateY(8px); }
+
+/* Phones: the map is a band, not a backdrop. The card sits below it, overlapping the bottom
+   edge just enough to read as one composition, so the map keeps most of the screen to itself. */
+@media (max-width: 44rem) {
+  .hero { display: block; min-height: 0; padding: 0 1rem 2rem; overflow: visible; }
+  .hero__map { position: relative; inset: auto; height: 56svh; min-height: 22rem; margin: 0 -1rem; }
+  .hero__panel { margin-top: -2.5rem; max-width: none; }
+  .hero__lede { font-size: 0.9375rem; }
+  .hero__explore { top: 4.25rem; }
+  .hero.is-exploring .hero__panel { opacity: 1; transform: none; } /* nothing to uncover on phones */
+  .maplibregl-ctrl-bottom-right { bottom: 2.5rem; } /* clear the card's overlap */
+}
 .hero__panel h1 { margin-bottom: 1rem; }
 .hero__lede { max-width: 34rem; margin-bottom: 1.25rem; }
 .hero__caption {
@@ -286,23 +298,32 @@ h2 {
 .maplibregl-map { font: inherit; } /* MapLibre sets 12px Helvetica on the container */
 .maplibregl-canvas:focus-visible { outline-offset: -3px; } /* the canvas fills a clipped box */
 .maplibregl-popup { pointer-events: auto; max-width: 240px; }
-/* The tip is a CSS-border triangle; colour the side that touches the bubble to match its surface. */
-.maplibregl-popup-tip { border-width: 8px; position: relative; z-index: 1; }
+/* The arrow is a rotated square carrying the same ring as the bubble, tucked 8px under it and
+   clipped to the outward half, so the outline reads as one continuous shape in both themes.
+   (MapLibre's default tip is a border-triangle, which cannot take an outline.) */
+.maplibregl-popup-tip {
+  border: 0;
+  width: 14px;
+  height: 14px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  transform: rotate(45deg);
+  position: relative;
+  z-index: 2;
+}
 .maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
 .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
-.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip { margin-top: -1px; }
+.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip { margin-top: -8px; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
 .maplibregl-popup-anchor-top .maplibregl-popup-tip,
 .maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
-.maplibregl-popup-anchor-top-right .maplibregl-popup-tip { margin-bottom: -1px; }
-.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
-.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
-.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip { border-top-color: var(--glass); }
-.maplibregl-popup-anchor-top .maplibregl-popup-tip,
-.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
-.maplibregl-popup-anchor-top-right .maplibregl-popup-tip { border-bottom-color: var(--glass); }
-.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: var(--glass); }
-.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: var(--glass); }
+.maplibregl-popup-anchor-top-right .maplibregl-popup-tip { margin-bottom: -8px; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.maplibregl-popup-anchor-left .maplibregl-popup-tip { margin-right: -8px; clip-path: polygon(0 0, 0 100%, 100% 100%); }
+.maplibregl-popup-anchor-right .maplibregl-popup-tip { margin-left: -8px; clip-path: polygon(0 0, 100% 0, 100% 100%); }
 .maplibregl-popup-content {
+  position: relative;
+  z-index: 1;
   font: inherit;
   color: var(--text);
   background: var(--glass);

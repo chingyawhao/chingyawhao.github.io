@@ -85,10 +85,13 @@ function initMap() {
 
   /* Keep the map's centre of interest in the part not covered by the hero panel. */
   const mapEl = $('map');
-  const pad = () => ({
-    top: 72, left: 24, right: 24,
-    bottom: Math.min(panel.offsetHeight + 24, mapEl.clientHeight * 0.55),
-  });
+  /* bottom = how much of the map the panel actually covers (all of it on desktop, a sliver on phones) */
+  const pad = () => {
+    const m = mapEl.getBoundingClientRect();
+    const overlap = m.bottom - panel.getBoundingClientRect().top;
+    const belowExplore = explore.getBoundingClientRect().bottom - m.top + 48; // popups open upward (~140px tall); keep them off the button
+    return { top: Math.max(72, belowExplore), left: 24, right: 24, bottom: Math.max(24, Math.min(overlap + 24, mapEl.clientHeight * 0.55)) };
+  };
   map = new maplibregl.Map({
     container: 'map',
     style: document.documentElement.dataset.theme === 'dark' ? TILES_DARK : TILES_LIGHT,
@@ -178,9 +181,12 @@ function initMap() {
     if (e.key === 'Escape' && hero.classList.contains('is-exploring')) setExploring(false);
   });
 
-  map.once('load', () => {
+  /* Reveal on style.load, not load: load waits for every initial tile, which on a slow tile CDN
+     leaves the hero blank for seconds. Tiles paint progressively once the style is in. */
+  map.once('style.load', () => {
     hero.classList.add('is-live');
     explore.hidden = false;
+    map.setPadding(pad()); // the button now has a size
     tour();
   });
   map.on('error', (e) => {
