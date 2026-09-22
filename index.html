@@ -10,6 +10,17 @@
 <meta property="og:title" content="Ching Yaw Hao">
 <meta property="og:description" content="Co-founder &amp; CTO at MyRumahBaru. Ten years building consumer and marketplace products in Malaysia.">
 <meta property="og:url" content="https://chingyawhao.com/">
+<meta property="og:image" content="https://chingyawhao.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ching Yaw Hao — Co-founder & CTO, MyRumahBaru, Kuala Lumpur">
+<meta property="og:site_name" content="Ching Yaw Hao">
+<meta property="og:locale" content="en_MY">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ching Yaw Hao">
+<meta name="twitter:description" content="Co-founder &amp; CTO at MyRumahBaru. Ten years building consumer and marketplace products in Malaysia.">
+<meta name="twitter:image" content="https://chingyawhao.com/og.png">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#0b0b0c">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -36,14 +47,42 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Ching Yaw Hao",
-  "jobTitle": "Co-founder & CTO",
-  "worksFor": {"@type": "Organization", "name": "MyRumahBaru"},
-  "address": {"@type": "PostalAddress", "addressLocality": "Kuala Lumpur", "addressCountry": "MY"},
-  "email": "mailto:chingyawhao14@gmail.com",
-  "url": "https://chingyawhao.com/",
-  "sameAs": ["https://github.com/chingyawhao", "https://www.linkedin.com/in/chingyawhao"]
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://chingyawhao.com/#person",
+      "name": "Ching Yaw Hao",
+      "url": "https://chingyawhao.com/",
+      "image": "https://chingyawhao.com/og.png",
+      "jobTitle": "Co-founder & CTO",
+      "description": "Ching Yaw Hao is the co-founder and CTO of MyRumahBaru, an AI property advisor and property marketplace in Kuala Lumpur, Malaysia. He was previously the first engineering hire and later Head of Engineering at Didian (2018–2024), where the platform grew to RM266M GDV serving around 300 agents.",
+      "worksFor": { "@id": "https://myrumahbaru.com/#organization" },
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "Universiti Tunku Abdul Rahman", "alternateName": "UTAR" },
+      "address": { "@type": "PostalAddress", "addressLocality": "Kuala Lumpur", "addressCountry": "MY" },
+      "email": "mailto:chingyawhao14@gmail.com",
+      "sameAs": ["https://github.com/chingyawhao", "https://www.linkedin.com/in/chingyawhao"],
+      "knowsAbout": ["Property technology", "Marketplace products", "LLM agents", "Geospatial systems", "TypeScript", "React", "Flutter", "PostgreSQL", "PostGIS", "MapLibre"],
+      "award": ["e27 Luminaries 2021 — Breakthrough", "hack2hired 2017 — 1st runner-up, main hack", "e-Genting Programming Competition 2015 — Merit"],
+      "mainEntityOfPage": { "@id": "https://chingyawhao.com/#website" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://myrumahbaru.com/#organization",
+      "name": "MyRumahBaru",
+      "url": "https://myrumahbaru.com/",
+      "foundingDate": "2024-04",
+      "founder": { "@id": "https://chingyawhao.com/#person" },
+      "address": { "@type": "PostalAddress", "addressLocality": "Kuala Lumpur", "addressCountry": "MY" }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://chingyawhao.com/#website",
+      "url": "https://chingyawhao.com/",
+      "name": "Ching Yaw Hao",
+      "about": { "@id": "https://chingyawhao.com/#person" },
+      "inLanguage": "en"
+    }
+  ]
 }
 </script>
 </head>

@@ -1,0 +1,30 @@
+# Ching Yaw Hao
+
+> Co-founder & CTO of MyRumahBaru (https://myrumahbaru.com), an AI property advisor and property marketplace in Kuala Lumpur, Malaysia. Canonical page: https://chingyawhao.com/
+
+## Facts
+
+- Name: Ching Yaw Hao
+- Role: Co-founder & CTO, MyRumahBaru (co-founded April 2024; raised a USD 200K pre-seed)
+- Location: Kuala Lumpur, Malaysia
+- Owns at MyRumahBaru: product engineering, geospatial infrastructure, production LLM agent systems
+- Previously: Didian (2018–2024) — first engineering hire, later Head of Engineering leading a team of six; platform scaled to RM266M GDV serving around 300 agents across Malaysia
+- Previously: MoneyLion (2017–2018) — software engineer, React and TypeScript
+- Previously: UTAR MIMOS Lab (2016–2017) — research assistant; front end for DeepWood, a wood-species identification project with FRIM
+- Education: BSc (Hons) Software Engineering, Universiti Tunku Abdul Rahman
+- Awards: e27 Luminaries 2021 (Breakthrough); hack2hired 2017 (1st runner-up, main hack; winner, mini and warm-up hacks); e-Genting Programming Competition 2015 (Merit)
+- Stack: TypeScript, React, React Native, Flutter, Node.js, PostgreSQL, PostGIS, pgvector, Redis, BullMQ, MapLibre, Protomaps, Nominatim, OpenStreetMap, LangGraph, MCP, DigitalOcean, AWS
+
+## Work at MyRumahBaru
+
+- Sarah: the AI property advisor on myrumahbaru.com. Buyers describe what they want in plain language; Sarah asks clarifying questions, remembers the conversation, finds matches across new launches, subsale and rental listings, and books viewings with verified agents. Built on LangGraph, BullMQ, Redis and Postgres/PostGIS.
+- Geospatial layer: self-hosted map tiles (MapLibre, Protomaps/PMTiles) and a Nominatim instance for Malaysian address geocoding.
+- Search: multilingual (English, Malay, Chinese) semantic search over listings on pgvector/HNSW embeddings.
+- Lead funnel: server-side conversion attribution and appointment instrumentation.
+
+## Links
+
+- Site: https://chingyawhao.com/
+- GitHub: https://github.com/chingyawhao
+- LinkedIn: https://www.linkedin.com/in/chingyawhao
+- Email: chingyawhao14@gmail.com

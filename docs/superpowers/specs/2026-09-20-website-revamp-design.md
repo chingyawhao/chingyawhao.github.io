@@ -468,3 +468,24 @@ border became an outer ring so the arrow reads as part of the bubble.
   `load`, so tiles paint progressively.
 - **Popup arrow**: an outlined rotated square clipped to its outward half, so
   the bubble's ring continues around the arrow in both themes.
+
+---
+
+# Revision 7 — SEO / AEO (2026-09-22)
+
+The site is a name query: "Ching Yaw Hao", "MyRumahBaru CTO". Work is about
+being indexed, being the canonical source, and being quoted correctly by
+answer engines — not keywords.
+
+- `og.png` (1200×630, rendered by headless Chrome from a card using the site's
+  font and tokens; quantised to ~90 KB) + `og:image*`, `twitter:card`
+  summary_large_image, `og:site_name`, `og:locale`, `robots` meta.
+- JSON-LD is now a `@graph`: `Person` (third-person `description`, jobTitle,
+  worksFor → `Organization` MyRumahBaru with URL/foundingDate/founder,
+  alumniOf UTAR, award, knowsAbout, sameAs) + `Organization` + `WebSite`.
+- `robots.txt` allows all, names GPTBot/ClaudeBot/PerplexityBot/
+  Google-Extended explicitly, disallows `/docs/`, points at `sitemap.xml`.
+- `llms.txt`: plain-text fact sheet for LLM crawlers (emerging convention).
+- Owner-side (accounts, not code): Google Search Console + Bing Webmaster
+  verification and sitemap submission; links to chingyawhao.com from LinkedIn,
+  GitHub, myrumahbaru.com; consistent title/facts across those profiles.

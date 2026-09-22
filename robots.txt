@@ -1,0 +1,16 @@
+# chingyawhao.com — personal site. Search and answer engines are welcome to read and cite it.
+User-agent: *
+Allow: /
+Disallow: /docs/
+
+# AI crawlers, explicitly (the wildcard already allows them; this states intent)
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://chingyawhao.com/sitemap.xml
