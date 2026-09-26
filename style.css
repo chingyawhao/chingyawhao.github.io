@@ -528,20 +528,31 @@ main {
   background: var(--accent);
   color: var(--on-accent);
   border-radius: 14px 14px 4px 14px;
+  animation: none; /* it replaces a chip that already animated into this exact shape */
 }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Quick-reply chip: appears, highlights, then becomes the user bubble. */
-.chips { align-self: flex-end; animation: pop 0.25s var(--ease); }
+.chips { align-self: flex-end; max-width: 88%; animation: pop 0.25s var(--ease); }
 .chip {
   display: inline-block;
-  padding: 6px 12px;
-  border: 1px solid rgb(var(--accent-rgb) / 0.6);
+  /* Same box as .msg--user (padding, line-height, and an INSET ring rather than a border, which
+     would add 2px) so that when the chip is swapped for the real bubble nothing moves. */
+  padding: 8px 12px;
+  line-height: 1.45;
   border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgb(var(--accent-rgb) / 0.6);
   color: var(--accent);
-  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  transition: background 0.25s var(--ease), color 0.25s var(--ease),
+              border-radius 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
-.chip.is-on { background: var(--accent); color: var(--on-accent); }
+/* Chosen: the pill fills and its corners morph into the user bubble's, so the swap is invisible. */
+.chip.is-on {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: 14px 14px 4px 14px;
+  box-shadow: inset 0 0 0 1px transparent;
+}
 
 /* Listing cards inside a Sarah turn. */
 .listings { display: grid; gap: 8px; }
