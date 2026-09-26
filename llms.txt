@@ -22,6 +22,11 @@
 - Search: multilingual (English, Malay, Chinese) semantic search over listings on pgvector/HNSW embeddings.
 - Lead funnel: server-side conversion attribution and appointment instrumentation.
 
+## Side projects
+
+- Ai Chan Chatbot — https://ai-chan-chatbot.github.io/
+- Paimon Chatbot — https://paimon-chatbot.github.io/
+
 ## Links
 
 - Site: https://chingyawhao.com/
